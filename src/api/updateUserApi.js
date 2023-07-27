@@ -1,12 +1,17 @@
 import axios from 'axios';
 
-const updateUserApi = async (content, postImage) => {
+const updateUserApi = async (formVal, postImage) => {
   try {
     const accessToken = localStorage.getItem('access_token');
 
     const formData = new FormData();
-    if (content) formData.append('content', content);
-    if (postImage) formData.append('post_img', postImage);
+    if (formVal.first_name) formData.append('first_name', formVal.first_name);
+    if (formVal.last_name) formData.append('last_name', formVal.last_name);
+    if (formVal.age) formData.append('age', formVal.age);
+    if (formVal.country) formData.append('country', formVal.country);
+    if (formVal.education) formData.append('education', formVal.education);
+    if (formVal.work) formData.append('work', formVal.work);
+    if (postImage) formData.append('profile_image', postImage);
 
     const response = await axios.post(`http://localhost:8000/api/users/update/`, formData, {
       headers: {
@@ -16,12 +21,12 @@ const updateUserApi = async (content, postImage) => {
     });
 
     if (response.status === 200) {
-      console.log('Post updated successfully');
+      return response.data;
     } else {
-      console.log(response.error);
+      return response.error;
     }
   } catch (error) {
-    console.error(error);
+    return error;
   }
 };
 

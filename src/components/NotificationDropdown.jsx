@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux';
 
 import getNotificationsApi from '../api/getNotificationsApi';
 import notificationsSeenApi from '../api/notificationsSeenApi';
+import { useNavigate } from 'react-router-dom';
 
-const NotificationDropdown = ({ toggleNotification }) => {
+const NotificationDropdown = ({ toggleNotification, updateCount }) => {
     const { user } = useSelector(state => state.user);
     const [notes, setNotes] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -17,11 +19,20 @@ const NotificationDropdown = ({ toggleNotification }) => {
                 console.error(error);
             }
         };
-
         if (user) {
             fetchData();
         }
+        // const intervalId = setInterval(() => {
+        //     if (user) {
+        //         fetchData();
+        //     }
+        // }, 5 * 1000);
+        // return () => clearInterval(intervalId);
     }, [user]);
+
+    useEffect(() => {
+        updateCount(notes.length);
+      }, [notes, updateCount]);
 
     const getNotificationMessage = (notification) => {
         const { notification_type, post, comment } = notification;
@@ -43,10 +54,11 @@ const NotificationDropdown = ({ toggleNotification }) => {
         return "has started following you";
     };
 
-    const onClick = async (notificationId) => {
-        console.log(notificationId)
+    const onClick = async (notificationId, email) => {
         try {
-            await notificationsSeenApi(notificationId);
+            await notificationsSeenApi(notificationId)
+            toggleNotification();
+            navigate(`/profile/${email}` );
         } catch (error) {
             console.error(error);
         }
@@ -69,7 +81,7 @@ const NotificationDropdown = ({ toggleNotification }) => {
                             <li key={index}>
                                 <p
                                     className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm public hover:bg-neutral-100 active:no-underline cursor-pointer"
-                                    onClick={() => onClick(note.id)}
+                                    onClick={() => onClick(note.id, note.from_user.email)}
                                     data-te-dropdown-item-ref
                                 >
                                     {note.from_user.first_name} {note.from_user.last_name} {" "} {getNotificationMessage(note)}

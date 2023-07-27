@@ -35,7 +35,7 @@ const AdminSideBar = ({ children }) => {
           <img
             id="te-logo"
             className="mr-2 rounded-full w-8"
-            src="NextNode.png"
+            src="/NextNode.png"
             alt="TE Logo"
             draggable="false" />
           <span>NextNode Admin</span>

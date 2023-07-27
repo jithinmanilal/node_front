@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../features/user';
 
+import { logout } from '../features/user';
 import NotificationDropdown from './NotificationDropdown';
+import getNotificationsApi from '../api/getNotificationsApi';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const email = isAuthenticated ? user?.email : '';
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const onClick = () => {
     dispatch(logout());
     navigate('/');
+  };
+
+  const updateNotificationCount = (count) => {
+    setNotificationCount(count);
   };
 
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -40,6 +46,27 @@ const Navbar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getNotificationsApi();
+        console.log(data)
+        setNotificationCount(data.length);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if (user) {
+      fetchData();
+    }
+    const intervalId = setInterval(() => {
+      if (user) {
+          fetchData();
+      }
+    }, 5 * 1000);
+    return () => clearInterval(intervalId);
+  }, [user]);
+
   const authLinks = (
     <ul className={`md:flex md:items-center z-[-1] md:z-auto right-0 md:justify-end md:static absolute w-full text-[#4d2c4d] bg-white ${isMenuVisible ? 'block' : 'hidden'}`}>
       <li className="mx-4 my-6 md:my-0 lg:pr-2">
@@ -59,9 +86,9 @@ const Navbar = () => {
       </li>
       <li className="mx-4 my-6 md:my-0 lg:pr-2">
         <span onClick={toggleNotification} className="text-sm font-semibold leading-6 cursor-pointer">
-          Notification
+          Notification <span className={`text-xs text-blue-700 p-1 align-top${notificationCount === 0 ? '' : 'border border-black align-top rounded-full'}`}> { notificationCount === 0 ? '' : notificationCount } </span>
         </span>
-        {isNotificationVisible && <NotificationDropdown onClick={toggleNotification} />}
+        {isNotificationVisible && <NotificationDropdown toggleNotification={toggleNotification} updateCount={updateNotificationCount}/>}
       </li>
       <li className="mx-4 my-6 md:my-0 lg:pr-2">
         <Link to={ `/profile/${email}` } className="text-sm font-semibold leading-6">
@@ -106,7 +133,7 @@ const Navbar = () => {
       <div className="flex justify-between items-center">
         <Link to="/" className="-m-1.5 p-1.5">
           <span className="sr-only">NextNode</span>
-          <img className="h-9 w-auto rounded-full" src="NextNode.png" alt="NextNode" />
+          <img className="h-9 w-auto rounded-full" src="/NextNode.png" alt="NextNode" />
         </Link>
         <span onClick={Menu} className="material-symbols-outlined text-2xl cursor-pointer md:hidden block">
           menu

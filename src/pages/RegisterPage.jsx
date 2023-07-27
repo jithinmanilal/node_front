@@ -80,7 +80,7 @@ const RegisterPage = () => {
                   {errors.last_name && (
                     <div className="text-red-600 text-sm">{errors.last_name}</div>
                   )}
-              </div>
+                </div>
               </div>
               <div className="col-span-full">
                 <div className="sm:col-span-2 sm:col-start-1 w-12 ">
