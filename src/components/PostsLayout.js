@@ -1,0 +1,120 @@
+import React, { useState } from 'react';
+import Navbar from './Navbar';
+import { Helmet } from 'react-helmet';
+import { useSelector } from 'react-redux';
+import PostsModal from './PostsModal';
+
+
+const PostsLayout = ({ title, content, children }) => {
+  const { user } = useSelector(state => state.user);
+  const [show, setShow] = useState(false);
+  const [showSideNav, setShowSideNav] = useState(false);
+
+  const createPost = () => {
+    if (show === true) {
+      setShow(false)
+    } else {
+      setShow(true)
+    }
+  };
+
+  const sideNavVisibleClasses = "fixed left-0 top-20 z-[1035] h-full w-60 overflow-hidden bg-[#4d2a4c] md:data-[te-sidenav-hidden='false']:translate-x-0";
+  const sideNavHiddenClasses = "fixed -translate-x-full left-0 top-20 z-[1035] h-full w-60 overflow-hidden bg-[#4d2a4c] md:data-[te-sidenav-hidden='false']:translate-x-0";
+
+
+  const toggleSideNav = () => {
+    setShowSideNav(prevState => !prevState);
+  };
+
+  return (
+    <>
+        <Helmet>
+            <title>{title}</title>
+            <meta name='description' content={content} />
+        </Helmet>
+        <Navbar/>
+        <div className='container mx-auto w-full'>
+            <div className=" [&>*]:leading-[1.6]">
+              <div className='bg-white'>
+                <button
+                  className='fixed bg-white p-1 border z-50 rounded-full top-20 right-0 md:hidden text-[#4b2848] '
+                  onClick={toggleSideNav}
+                >
+                  <span class="material-symbols-outlined">
+                    side_navigation
+                  </span>
+                </button>
+              </div>
+                <nav
+                    id="full-screen-example"
+                    className={showSideNav ? sideNavVisibleClasses : sideNavHiddenClasses}
+                    data-te-sidenav-init
+                    data-te-sidenav-mode-breakpoint-over="0"
+                    data-te-sidenav-mode-breakpoint-side="sm"
+                    data-te-sidenav-hidden="false"
+                    data-te-sidenav-color="dark"
+                    data-te-sidenav-content="#content"
+                    data-te-sidenav-scroll-container="#scrollContainer">
+                    <div className="pt-6">
+                      <div id="header-content" className="flex flex-col items-center">
+                        {user && user.profile_image && (
+                          <img
+                            src={`http://localhost:8000${user.profile_image}`}
+                            alt="Profile"
+                            className="mb-4 h-auto rounded-full align-middle"
+                            style={{ maxWidth: "50px" }}
+                          />
+                        )}
+                        {user && (
+                          <>
+                            <h4 className="mb-2 text-2xl raleway text-white text-center font-medium leading-[1.2]">
+                              {user.first_name ?? ""} {user.last_name ?? ""}
+                            </h4>
+                            <p className="mb-2 text-white raleway text-center">{user.email ?? ""}</p>
+                            <p className="mb-2 text-white raleway text-center text-xs">Following: </p>
+                            <p className="mb-2 text-white rajdhani text-center "> {user.following_count ?? "0"}</p>
+                            <p className="mb-2 text-white raleway text-center text-xs">Followers: </p>
+                            <p className="mb-2 text-white rajdhani text-center"> {user.follower_count ?? "0"}</p>
+                          </>
+                        )}
+                      </div>
+
+                    <hr className="border-gray-300" />
+                    </div>
+                    <div id="scrollContainer">
+                    <ul className="relative karla m-0 list-none px-[0.2rem]" data-te-sidenav-menu-ref>
+                      <li className="relative flex justify-center">
+                        <a
+                          className="group flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[0.875rem] text-white text-center outline-none transition duration-300 ease-linear hover:bg-gray-300/30 hover:text-white hover:outline-none focus:bg-gray-300/30 focus:text-white focus:outline-none active:bg-gray-300/30 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
+                          href="#!"
+                          onClick={createPost}
+                          data-te-sidenav-link-ref
+                        >
+                          <span class="material-symbols-outlined">post_add</span>
+                          <span> Post</span>
+                        </a>
+                      </li>
+                    </ul>                    
+                    </div>
+                    <div className="absolute bottom-0 h-24 w-full bg-inherit text-center">
+                    <hr className="mb-6 border-gray-300" />
+                    <p className='text-white text-center ' >nextnode</p>
+                    </div>
+                </nav>
+
+                <div
+                    className="min-h-screen w-full !pl-0 text-center md:!pl-60"
+                    id="content">
+                   < PostsModal isVisible={show} onClose={() => setShow(false)}/>
+                    <div className=''>
+                    { children }
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </>
+  )
+}
+export default PostsLayout
