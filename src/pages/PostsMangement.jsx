@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import AdminSideBar from '../components/AdminSideBar';
+
 import postapi from '../api/postapi';
 import deletePostApi from '../api/deletePostApi';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PostsManagement = () => {
   const [posts, setPosts] = useState([]);
@@ -23,9 +27,15 @@ const PostsManagement = () => {
     try {
       await deletePostApi(postId);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-      console.log('Post deleted successfully');
+      toast.success('Post Deleted successfully!', {
+        position: "top-right",
+        theme: "dark",
+    });
     } catch (error) {
-      console.error(error);
+      toast.error('Failure, post not deleted!', {
+        position: "top-right",
+        theme: "dark",
+      });
     }
   };
   
@@ -33,13 +43,14 @@ const PostsManagement = () => {
   return (
     <AdminSideBar>
       <div className="mx-auto">
-        <h1 className='text-center '>Posts Management</h1>
-        <table className="w-full border-collapse">
+        <h1 className='text-center text-xl public font-bold'>Posts Management</h1>
+        <table className="w-full border-collapse mt-4">
           <thead>
             <tr>
               <th className="px-4 py-2">Post image</th>
               <th className="px-4 py-2">Post Description</th>
               <th className="px-4 py-2">Post User</th>
+              <th className="px-4 py-2">Report</th>
               <th className="px-4 py-2">User Email</th>
               <th className="px-4 py-2">Actions</th>
             </tr>
@@ -56,6 +67,7 @@ const PostsManagement = () => {
                 <td className="px-4 py-2">
                   {post.author.first_name} {post.author.last_name}
                 </td>
+                <td className="px-4 py-2">{ post.reports_count === 0 ? '-': `Reported by ${post.reports_count} users` }</td>
                 <td className="px-4 py-2">{post.author.email}</td>
                 <td className="px-4 py-2">
                   <button
@@ -72,6 +84,7 @@ const PostsManagement = () => {
           </tbody>
         </table>
       </div>
+      < ToastContainer />
     </AdminSideBar>
   );
 };

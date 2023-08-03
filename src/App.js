@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { checkAuth, updateToken } from './features/user';
 
-import HomePage from './pages/HomePage';
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -15,6 +14,9 @@ import MyNetworksPage from './pages/MyNetworksPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import PostsMangement from './pages/PostsMangement';
+import UserManagementPage from './pages/UserManagementPage';
+
+import NotFoundPage from './pages/NotFoundPage';
 
 
 function App() {
@@ -38,9 +40,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={< HomePage/>} />
+        <Route path='/' element={< LoginPage/>} />
         <Route path='/profile/:email' element={< Dashboard/>} />
-        <Route path='/login' element={< LoginPage/>} />
         <Route path='/register' element={< RegisterPage/>} />
         <Route path='/about' element={< AboutPage/>} />
         <Route path='/home' element={< PostsPage/>} />
@@ -49,6 +50,9 @@ function App() {
         <Route path='/admin-login' element={< AdminLogin/>} />
         <Route path='/admin' element={< AdminDashboard/>} />
         <Route path='/admin/post' element={< PostsMangement/>} />
+        <Route path='/admin/user' element={< UserManagementPage/>} />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router> 
   );

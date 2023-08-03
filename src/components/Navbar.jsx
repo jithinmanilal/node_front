@@ -120,11 +120,11 @@ const Navbar = () => {
           Contact Us
         </Link>
       </li>
-      <li className="mx-4 my-6 md:my-0 lg:pr-2">
-        <Link to="/login" className="text-sm font-semibold leading-6">
+      {/* <li className="mx-4 my-6 md:my-0 lg:pr-2">
+        <Link to="/" className="text-sm font-semibold leading-6">
           Login
         </Link>
-      </li>
+      </li> */}
     </ul>
   );
 

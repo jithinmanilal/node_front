@@ -36,7 +36,7 @@ const Dashboard = () => {
       <UpdateProfileModal isVisible={showModal} onClose={handleClose} />
       <section className="pt-16 bg-blueGray-50">
           <div className="w-full lg:w-5/6 px-4 mx-auto">
-            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
+            <div className="relative flex flex-col min-w-0 break-words bg-[#f8eeeb] w-full mb-6 shadow-xl rounded-lg mt-16">
               <div className="px-6">
                 <div className="flex flex-wrap justify-center">
                   <div className="w-full px-4 flex justify-center">
@@ -126,7 +126,7 @@ const Dashboard = () => {
                     posts.map((post) => (
                       <div
                         key={post.id}
-                        className="p-2 border-t border-blueGray-200 text-center m-2"
+                        className="p-2 border-t border-blueGray-200 text-center m-2 transition-transform transform-gpu hover:scale-110"
                         style={{ maxWidth: '200px', maxHeight: '200px' }}
                       >
                         <div
@@ -138,6 +138,7 @@ const Dashboard = () => {
                             src={`http://localhost:8000${post.post_img}`}
                             alt="post"
                             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                            className='rounded-md cursor-pointer'
                           />
                         </div>
                       </div>

@@ -128,7 +128,7 @@ export const checkAuth = createAsyncThunk('users/verify/', async (_, thunkApi) =
 export const updateToken = createAsyncThunk(
     'users/refresh/',
     async (_, thunkApi) => {
-        const refreshToken = localStorage.getItem('access_token');
+        const refreshToken = localStorage.getItem('refresh_token');
         const body = JSON.stringify({ token : refreshToken })
         try {
             const res = await fetch('http://127.0.0.1:8000/api/token/refresh/', {

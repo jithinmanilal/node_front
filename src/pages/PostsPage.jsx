@@ -6,6 +6,7 @@ import postapi from '../api/postapi';
 import likePostApi from '../api/likePostApi';
 import deletePostApi from '../api/deletePostApi';
 import followUserApi from '../api/followUserApi';
+import reportPostApi from '../api/reportPostApi';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,7 +17,7 @@ import Comments from '../components/Comments';
 import CommentsModal from '../components/CommentsModal';
 
 
-const Dropdown = ({ post, handleDeletePost, handleUpdatePost }) => {
+const Dropdown = ({ post, handleDeletePost, handleUpdatePost, handleReportPost }) => {
   const { user } = useSelector(state => state.user);
   const [showMenu, setShowMenu] = useState(false);
   
@@ -46,10 +47,13 @@ const Dropdown = ({ post, handleDeletePost, handleUpdatePost }) => {
               onClick={() => {
                 if (menuItem.label === 'Delete') {
                   handleDeletePost(post.id);
-                  setShowMenu(!showMenu);
+                  handleMenuClick();
                 } else if (menuItem.label === 'Update') {
                   handleUpdatePost(post.id);
-                  setShowMenu(!showMenu);
+                  handleMenuClick();
+                } else if (menuItem.label === 'Report') {
+                  handleReportPost(post.id);
+                  handleMenuClick();
                 }
               }}
             >
@@ -96,6 +100,7 @@ const PostsPage = () => {
     );
   }
 
+  
   const handleDeletePost = async (postId) => {
     try {
       await deletePostApi(postId, fetchData);
@@ -112,6 +117,19 @@ const PostsPage = () => {
   const handleUpdatePost = (postId) => {
     setShowModal(true);
     setPostId(postId); 
+  };
+
+  const handleReportPost = async (postId) => {
+    try {
+      await reportPostApi(postId, fetchData);
+      toast.success('Post Reported successfully!', {
+        position: "top-center",
+      });
+    } catch (err) {
+      toast.error('Failure, Post not Reported!', {
+        position: "top-center",
+      });
+    }
   };
   
   const closeModal = () => {
@@ -229,6 +247,7 @@ const PostsPage = () => {
                       post={post}
                       handleDeletePost={handleDeletePost}
                       handleUpdatePost={handleUpdatePost}
+                      handleReportPost={handleReportPost}
                     />
                   </div>
                 </div>

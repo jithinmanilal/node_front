@@ -124,7 +124,7 @@ const RegisterPage = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already a member?
-            <Link to={'/login'} className="font-semibold leading-6 text-[#4d2c4d] hover:text-[#92638f]">Login</Link>
+            <Link to={'/'} className="font-semibold leading-6 text-[#4d2c4d] hover:text-[#92638f]">Login</Link>
           </p>
         </div>
       </div>

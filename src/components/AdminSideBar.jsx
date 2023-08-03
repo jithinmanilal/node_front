@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../features/user';
 import { Sidenav, initTE } from "tw-elements";
+import Unauthorized from './Unauthorized';
 
 const AdminSideBar = ({ children }) => {
   initTE({ Sidenav });
@@ -25,7 +26,8 @@ const AdminSideBar = ({ children }) => {
             className="absolute left-0 top-0 z-[1035] h-full w-60 -translate-x-full overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] dark:bg-zinc-800 xl:data-[te-sidenav-hidden='false']:translate-x-0"
             data-te-sidenav-init
             data-te-sidenav-hidden="false"
-            data-te-sidenav-position="absolute"
+            data-te-sidenav-mode="side"
+            data-te-sidenav-content="#content"
           >
             <a
           className="mb-3 flex items-center text-white justify-center py-6 outline-none"
@@ -57,7 +59,7 @@ const AdminSideBar = ({ children }) => {
           <li className="relative">
             <Link
               className="group flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[0.875rem] text-gray-700 outline-none transition duration-300 ease-linear hover:bg-primary-400/10 hover:text-primary-600 hover:outline-none focus:bg-primary-400/10 focus:text-primary-600 focus:outline-none active:bg-primary-400/10 active:text-primary-600 active:outline-none data-[te-sidenav-state-active]:text-primary-600 data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-              to='/admin/post'
+              to={'/admin/post'}
               data-te-sidenav-link-ref>
               <span
                 className="mr-4 [&>svg]:h-3.5 [&>svg]:w-3.5 [&>svg]:fill-gray-700 [&>svg]:transition [&>svg]:duration-300 [&>svg]:ease-linear group-hover:[&>svg]:fill-primary-600 group-focus:[&>svg]:fill-primary-600 group-active:[&>svg]:fill-primary-600 group-[te-sidenav-state-active]:[&>svg]:fill-primary-600 motion-reduce:[&>svg]:transition-none dark:[&>svg]:fill-gray-300 dark:group-hover:[&>svg]:fill-gray-300 ">
@@ -69,7 +71,7 @@ const AdminSideBar = ({ children }) => {
           <li className="relative">
             <Link
               className="group flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[0.875rem] text-gray-700 outline-none transition duration-300 ease-linear hover:bg-primary-400/10 hover:text-primary-600 hover:outline-none focus:bg-primary-400/10 focus:text-primary-600 focus:outline-none active:bg-primary-400/10 active:text-primary-600 active:outline-none data-[te-sidenav-state-active]:text-primary-600 data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-              href="#!"
+              to={'/admin/user'}
               data-te-sidenav-link-ref>
               <span
                 className="mr-4 [&>svg]:h-3.5 [&>svg]:w-3.5 [&>svg]:fill-gray-700 [&>svg]:transition [&>svg]:duration-300 [&>svg]:ease-linear group-hover:[&>svg]:fill-primary-600 group-focus:[&>svg]:fill-primary-600 group-active:[&>svg]:fill-primary-600 group-[te-sidenav-state-active]:[&>svg]:fill-primary-600 motion-reduce:[&>svg]:transition-none dark:[&>svg]:fill-gray-300 dark:group-hover:[&>svg]:fill-gray-300 ">
@@ -79,7 +81,7 @@ const AdminSideBar = ({ children }) => {
             </Link>
           </li>
 
-          <hr className="border-gray-300" />
+          <hr className="border-gray-300 mt-80" />
 
           <li className="relative">
             <p
@@ -122,12 +124,7 @@ const AdminSideBar = ({ children }) => {
 
         </div>
       ) : (
-        <div className="mx-auto">
-          <h5>You are not authorized to visit this page.</h5>
-          <br />
-          <br />
-          <Link to="/">Go Home</Link>
-        </div>
+        <Unauthorized />
       )}
       <div className="p-5 !pl-[260px] text-center" id="content">
         {children}

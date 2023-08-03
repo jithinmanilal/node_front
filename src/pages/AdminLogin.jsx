@@ -77,7 +77,7 @@ const AdminLogin = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not an admin?
-            <Link to={'/login'} className="font-semibold leading-6 text-[#4d2c4d] hover:text-[#92638f]">User Login</Link>
+            <Link to={'/'} className="font-semibold leading-6 text-[#4d2c4d] hover:text-[#92638f]">User Login</Link>
           </p>
         </div>
       </div>
