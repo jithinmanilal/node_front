@@ -15,8 +15,10 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import PostsMangement from './pages/PostsMangement';
 import UserManagementPage from './pages/UserManagementPage';
+import BlockedPage from './pages/BlockedPage';
 
 import NotFoundPage from './pages/NotFoundPage';
+import ReportedPage from './pages/ReportedPage';
 
 
 function App() {
@@ -51,6 +53,8 @@ function App() {
         <Route path='/admin' element={< AdminDashboard/>} />
         <Route path='/admin/post' element={< PostsMangement/>} />
         <Route path='/admin/user' element={< UserManagementPage/>} />
+        <Route path='/admin/blocked' element={< BlockedPage/>} />
+        <Route path='/admin/reported' element={< ReportedPage/>} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -68,7 +68,7 @@ const CommentsModal = ({ postId, isVisible, onClose, comments }) => {
   return (
     <div
       id="wrapper"
-      className="fixed inset-0 bg-black bg-opacity-50 z-10 backdrop-blur-md flex justify-center items-center"
+      className="fixed inset-0 bg-black bg-opacity-50 p-2 z-10 backdrop-blur-md flex justify-center items-center"
       onClick={handleClose}
     >
       <div className="w-96 flex flex-col">

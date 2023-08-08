@@ -44,6 +44,8 @@ const NotificationDropdown = ({ toggleNotification, updateCount }) => {
             return "commented on your post";
           } else if (notification_type === "post") {
             return "created a new post";
+          }else if (notification_type === "blocked") {
+            return "blocked you post";
           }
         } else if (comment) {
           if (notification_type === "comment") {
@@ -84,7 +86,9 @@ const NotificationDropdown = ({ toggleNotification, updateCount }) => {
                                     onClick={() => onClick(note.id, note.from_user.email)}
                                     data-te-dropdown-item-ref
                                 >
-                                    {note.from_user.first_name} {note.from_user.last_name} {" "} {getNotificationMessage(note)}
+                                    {note.notification_type === "blocked"
+                                        ? "Admin blocked you post"
+                                        : `${note.from_user.first_name} ${note.from_user.last_name} ${getNotificationMessage(note)}`}
                                 </p>
                             </li>
                         ))

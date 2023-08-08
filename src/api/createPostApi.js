@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BASE_URL } from '../config';
 
 const createPostApi = async (content, postImage) => {
   try {
@@ -8,7 +9,7 @@ const createPostApi = async (content, postImage) => {
     formData.append('content', content);
     formData.append('post_img', postImage);
 
-    const response = await axios.post('http://localhost:8000/post/create-post/', formData, {
+    const response = await axios.post(`${BASE_URL}/post/create-post/`, formData, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,

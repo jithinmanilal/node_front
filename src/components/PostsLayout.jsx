@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import {BASE_URL} from '../config';
 import Navbar from './Navbar';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import PostsModal from './PostsModal';
+import { Link } from 'react-router-dom';
 
 
 const PostsLayout = ({ title, content, children }) => {
   const { user } = useSelector(state => state.user);
+  
   const [show, setShow] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
 
@@ -58,12 +61,14 @@ const PostsLayout = ({ title, content, children }) => {
                     <div className="pt-6">
                       <div id="header-content" className="flex flex-col items-center">
                         {user && user.profile_image && (
-                          <img
-                            src={`http://localhost:8000${user.profile_image}`}
-                            alt="Profile"
-                            className="mb-4 h-auto rounded-full align-middle"
-                            style={{ maxWidth: "50px" }}
-                          />
+                          <Link to={ `/profile/${user.email}` }>
+                            <img
+                              src={`${BASE_URL}${user.profile_image}`}
+                              alt="Profile"
+                              className="mb-4 h-auto rounded-full align-middle"
+                              style={{ maxWidth: "50px" }}
+                            />
+                          </Link>
                         )}
                         {user && (
                           <>

@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { BASE_URL } from '../config';
 
 const likePostApi = async (postId, fetchData) => {
   try {
     const accessToken = localStorage.getItem('access_token');
     let body = {}
-    const response = await axios.post(`http://localhost:8000/post/like/${postId}/`,body,{
+    const response = await axios.post(`${BASE_URL}/post/like/${postId}/`,body,{
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

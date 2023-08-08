@@ -54,13 +54,20 @@ const MyNetworksPage = () => {
     }
   };
 
+  const handleConfirm = (userId, person) => {
+    const userConfirmed = window.confirm(`Are you sure you want to unfollow ${person}?`);
+    if (userConfirmed) {
+      handleToggleFollow(userId);
+    }
+  };
+
   return (
     <PostsLayout title='NextNode | NetworkPage' content='Network page'>
       <h2 className="mt-28 text-[#4b2848]">People you may know:</h2>
       <div className="mt-2" style={{ display: 'flex', flexWrap: 'wrap' }}>
         {follows ? (
           follows.map((follow) => (
-            <div class="block rounded-lg w-60 m-2 p-2 bg-[#f8eeeb] text-[#4b2848] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+            <div class="block rounded-lg w-60 m-2 p-2 mx-auto md:mx-2 bg-[#f8eeeb] text-[#4b2848] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
               <Link to={ `/profile/${follow.email}` }>
                 <img class="rounded-full w-1/2 mx-auto" src={follow.profile_image} alt="Profile" />
               </Link>
@@ -92,7 +99,7 @@ const MyNetworksPage = () => {
       <div className="mt-2" style={{ display: 'flex', flexWrap: 'wrap' }}>
         {profiles ? (
           profiles.map((follow) => (
-            <div class="block rounded-lg w-60 m-2 p-2 bg-[#f8eeeb] text-[#4b2848] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+            <div class="block rounded-lg w-60 m-2 p-2 mx-auto md:mx-2 bg-[#f8eeeb] text-[#4b2848] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
               <Link to={ `/profile/${follow.email}` }> 
                 <img class="rounded-full w-1/2 mx-auto" src={follow.profile_image} alt="Profile" />
               </Link>
@@ -109,7 +116,7 @@ const MyNetworksPage = () => {
                     data-te-ripple-init
                     data-te-ripple-color="light"
                     title="Unfollow"
-                    onClick={() => handleToggleFollow(follow.id)}
+                    onClick={() => handleConfirm(follow.id, follow.first_name)}
                   >
                     <span class="material-symbols-outlined">person_remove</span>
                 </button>

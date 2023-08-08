@@ -51,9 +51,27 @@ const LoginPage = () => {
     }
   },[isAuthenticated, navigate]);
 
+  if (loading) {
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <div
+          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+          role="status"
+        >
+          <span
+            className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+          >
+            Loading...
+          </span>
+        </div>
+      </div>
+    )
+  };
+  
+
   return (
     <Layout title='NextNode | Login' content='Login page'>
-      <div className="flex flex-col md:flex-row justify-center items-center h-full mt-28">
+      <div className="flex flex-col md:flex-row justify-center p-2 items-center h-full mt-28">
         <div className="w-full md:w-1/2 p-2 md:p-2 mt-14 md:mt-0 md:mr-8 bg-white rounded-lg shadow-md">
           <div className="flex justify-center mb-2">
             <img className='h-56 w-auto rounded-full' src='next_node.png' alt='logo'/>
@@ -99,20 +117,10 @@ const LoginPage = () => {
                 <div className="mt-2">
                   <input id="password" name="password" onChange={onChange} value={password} type="password" required className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#92638f] sm:text-sm sm:leading-6"/>
                 </div>
-              </div>
-              { loading ? (
-                <div
-                className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                  role="status">
-                  <span
-                    className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-                    >Loading...</span>
                 </div>
-              ): (
                 <div className="mt-6">
                   <button type="submit" className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#4d2c4d] hover:bg-[#92638f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4d2c4d]">Sign in</button>
                 </div>
-              )}
             </form>
 
             <p className="mt-4 text-center text-sm text-gray-500">

@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import {BASE_URL} from '../config';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import PostsLayout from '../components/PostsLayout';
 import getProfileApi from '../api/getProfileApi';
 import UpdateProfileModal from '../components/UpdateProfileModal';
+import PostPageModal from '../components/PostPageModal';
 
 const Dashboard = () => {
+  const { user } = useSelector(state => state.user);
   const [posts, setPosts] = useState([]);
   const [profile, setProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const { user } = useSelector(state => state.user);
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [postId, setPostId] = useState(null);
+
   const param = useParams();
   const email = param.email
 
@@ -27,12 +32,23 @@ const Dashboard = () => {
     fetchData();
   }, [email]);
 
+  const handlePostClick = (postId) => {
+    setPostId(postId);
+    setShowPostModal(true);
+  };
+
+  const closePostModal = () => {
+    setShowPostModal(false);
+    setPostId(null);
+  };
+
   const handleClose = () => {
     setShowModal(false);
   };
 
   return (
     <PostsLayout title='NextNode | Profile' content='Profile page'>
+      <PostPageModal isVisible={showPostModal} onClose={closePostModal} postId={postId}/>
       <UpdateProfileModal isVisible={showModal} onClose={handleClose} />
       <section className="pt-16 bg-blueGray-50">
           <div className="w-full lg:w-5/6 px-4 mx-auto">
@@ -43,7 +59,7 @@ const Dashboard = () => {
                     <div className="relative">
                       {profile && profile.profile_image && (
                         <img
-                          src={`http://localhost:8000${profile.profile_image}`}
+                          src={`${BASE_URL}${profile.profile_image}`}
                           alt="Profile"
                           className="mt-4 h-auto rounded-full align-middle"
                           style={{ maxWidth: "200px" }}
@@ -135,8 +151,9 @@ const Dashboard = () => {
                           }}
                         >
                           <img
-                            src={`http://localhost:8000${post.post_img}`}
+                            src={`${BASE_URL}${post.post_img}`}
                             alt="post"
+                            onClick={()=>handlePostClick(post.id)}
                             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                             className='rounded-md cursor-pointer'
                           />

@@ -15,61 +15,15 @@ import PostsLayout from '../components/PostsLayout';
 import PostsModal from '../components/PostsModal';
 import Comments from '../components/Comments';
 import CommentsModal from '../components/CommentsModal';
+import Dropdown from '../components/DropDown';
+import PostPageModal from '../components/PostPageModal';
 
-
-const Dropdown = ({ post, handleDeletePost, handleUpdatePost, handleReportPost }) => {
-  const { user } = useSelector(state => state.user);
-  const [showMenu, setShowMenu] = useState(false);
-  
-  const handleMenuClick = () => {
-    setShowMenu(!showMenu);
-  };
-
-  const menuOptions = post.author.email === user.email ? [{ label: 'Delete' }, { label: 'Update' }] : [{ label: 'Report' }];
-
-  return (
-    <div className="relative raleway text-sm font-bold inline-block">
-      <button
-        type="button"
-        className="inline-block mr-2 rounded-full bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-[#4b2848]]"
-        data-te-ripple-init
-        data-te-ripple-color="light"
-        onClick={handleMenuClick}
-      >
-        <span className="material-symbols-outlined">more_vert</span>
-      </button>
-      {showMenu && (
-        <div className="absolute right-0 top-0 mt-10 mr-2 bg-white text-[#4b2848] rounded-md shadow-lg">
-          {menuOptions.map((menuItem) => (
-            <div
-              key={menuItem.label}
-              className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                if (menuItem.label === 'Delete') {
-                  handleDeletePost(post.id);
-                  handleMenuClick();
-                } else if (menuItem.label === 'Update') {
-                  handleUpdatePost(post.id);
-                  handleMenuClick();
-                } else if (menuItem.label === 'Report') {
-                  handleReportPost(post.id);
-                  handleMenuClick();
-                }
-              }}
-            >
-              {menuItem.label}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
 
 const PostsPage = () => {
   const { loading, user } = useSelector(state => state.user);
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showPostModal, setShowPostModal] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [comments, setComments] = useState([]);
   const [postId, setPostId] = useState(null);
@@ -119,6 +73,11 @@ const PostsPage = () => {
     setPostId(postId); 
   };
 
+  const handlePostClick = (postId) => {
+    setPostId(postId);
+    setShowPostModal(true);
+  };
+
   const handleReportPost = async (postId) => {
     try {
       await reportPostApi(postId, fetchData);
@@ -134,6 +93,11 @@ const PostsPage = () => {
   
   const closeModal = () => {
     setShowModal(false);
+    setPostId(null);
+  };
+
+  const closePostModal = () => {
+    setShowPostModal(false);
     setPostId(null);
   };
 
@@ -190,6 +154,7 @@ const PostsPage = () => {
 
   return (
     <PostsLayout title="NextNode | Home" content="Home page">
+      <PostPageModal isVisible={showPostModal} onClose={closePostModal} postId={postId}  />
       <PostsModal isVisible={showModal} onClose={closeModal} postId={postId} />
       <div className="mt-28 rajdhani">
         {posts ? (
@@ -251,11 +216,12 @@ const PostsPage = () => {
                     />
                   </div>
                 </div>
-                <img
-                  className="rounded-lg mx-auto"
-                  src={post.post_img}
-                  alt=""
-                />
+                  <img
+                  onClick={()=>handlePostClick(post.id)}
+                    className="rounded-lg mx-auto cursor-pointer"
+                    src={post.post_img}
+                    alt=""
+                    />
               </div>
               <div className="p-6">
                 <p className="mb-4 text-lg raleway text-left font-semibold tooltip text-[#4b2848] ">{post.content}</p>

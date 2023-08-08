@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import AdminSideBar from '../components/AdminSideBar';
 
-import postapi from '../api/postapi';
+import reportedPostApi from '../api/reportedPostApi';
 import blockPostApi from '../api/blockPostApi';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PostPageModal from '../components/PostPageModal';
 
-const PostsManagement = () => {
+const ReportedPage = () => {
   const [posts, setPosts] = useState([]);
   const [showPostModal, setShowPostModal] = useState(false);
   const [postId, setPostId] = useState(null);
@@ -16,7 +16,7 @@ const PostsManagement = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await postapi();
+        const data = await reportedPostApi();
         setPosts(data);
       } catch (error) {
         console.error(error);
@@ -57,7 +57,7 @@ const PostsManagement = () => {
     <AdminSideBar>
       <PostPageModal isVisible={showPostModal} onClose={closePostModal} postId={postId}/>
       <div className="mx-auto">
-        <h1 className='text-center text-xl public font-bold'>Posts Management</h1>
+        <h1 className='text-center text-xl public font-bold'>Reported Posts</h1>
         <table className="w-full border-collapse mt-4">
           <thead>
             <tr>
@@ -73,7 +73,7 @@ const PostsManagement = () => {
             {posts.map((post) => (
               <tr key={post.id}>
                 <td className="px-4 py-2">
-                  <img className="rounded-full cursor-pointer w-12" onClick={()=>handlePostClick(post.id)} src={post.post_img} alt="Post" />
+                  <img className="rounded-full cursor-pointer w-12" src={post.post_img} onClick={()=>handlePostClick(post.id)} alt="Post" />
                 </td>
                 <td className="px-4 py-2 max-w-[200px] truncate">
                   {post.content}
@@ -103,4 +103,4 @@ const PostsManagement = () => {
   );
 };
 
-export default PostsManagement;
+export default ReportedPage;

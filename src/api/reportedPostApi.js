@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { BASE_URL } from '../config';
+import {BASE_URL} from '../config';
 
-const getNotificationsApi = async () => {
+const reportedPostApi = async () => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/post/notifications/`, {
+    const response = await axios.get(`${BASE_URL}/post/reported/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -22,4 +22,4 @@ const getNotificationsApi = async () => {
   }
 };
 
-export default getNotificationsApi;
+export default reportedPostApi;

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BASE_URL } from '../config';
 
 const getProfileApi = async (email) => {
   try {
@@ -6,7 +7,7 @@ const getProfileApi = async (email) => {
 
     const body = {}
 
-    const response = await axios.post(`http://localhost:8000/post/profile/${email}/`, body, {
+    const response = await axios.post(`${BASE_URL}/post/profile/${email}/`, body, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,

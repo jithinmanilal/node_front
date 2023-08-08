@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { toast } from 'react-toastify';
 import updateUserApi from "../api/updateUserApi";
+import { useSelector } from "react-redux";
 
 const UpdateProfileModal = ({ isVisible, onClose }) => {
+  const { user } = useSelector(state => state.user);
   const [postImage, setPostImage] = useState(null);
   const [formVal, setFormVal] = useState({
-    first_name: '',
-    last_name: '',
-    age: '',
-    country: '',
-    education: '',
-    work: ''
+    first_name: user.first_name,
+    last_name: user.last_name,
+    age: user.age,
+    country: user.country,
+    education: user.education,
+    work: user.work
   });
 
   const { first_name, last_name, age, country, education, work } = formVal;

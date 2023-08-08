@@ -1,9 +1,10 @@
 import axios from 'axios';
+import {BASE_URL} from '../config';
 
 const myNetworkApi = async () => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get('http://localhost:8000/post/network/', {
+    const response = await axios.get(`${BASE_URL}/post/network/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

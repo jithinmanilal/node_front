@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {BASE_URL} from '../config';
 
 const updateUserApi = async (formVal, postImage) => {
   try {
@@ -13,7 +14,7 @@ const updateUserApi = async (formVal, postImage) => {
     if (formVal.work) formData.append('work', formVal.work);
     if (postImage) formData.append('profile_image', postImage);
 
-    const response = await axios.post(`http://localhost:8000/api/users/update/`, formData, {
+    const response = await axios.post(`${BASE_URL}/api/users/update/`, formData, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,

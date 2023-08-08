@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {BASE_URL} from '../config';
 
 
 export const register = createAsyncThunk(
@@ -12,7 +13,7 @@ export const register = createAsyncThunk(
             password
         })
         try {
-            const res = await fetch('http://127.0.0.1:8000/api/users/register/', {
+            const res = await fetch(`${BASE_URL}/api/users/register/`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -36,7 +37,7 @@ export const register = createAsyncThunk(
 export const getUser = createAsyncThunk('users/me', async (_, thunkApi) => {
     const accessToken = localStorage.getItem('access_token');
     try {
-        const res = await fetch('http://127.0.0.1:8000/api/users/me/', {
+        const res = await fetch(`${BASE_URL}/api/users/me/`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -62,7 +63,7 @@ export const login = createAsyncThunk(
             password
         })
         try {
-            const res = await fetch('http://127.0.0.1:8000/api/token/', {
+            const res = await fetch(`${BASE_URL}/api/token/`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -91,7 +92,7 @@ export const checkAuth = createAsyncThunk('users/verify/', async (_, thunkApi) =
     const accessToken = localStorage.getItem('access_token');
     const body = JSON.stringify({ token: accessToken });
     try {
-        const res = await fetch('http://127.0.0.1:8000/api/token/verify/', {
+        const res = await fetch(`${BASE_URL}/api/token/verify/`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -131,7 +132,7 @@ export const updateToken = createAsyncThunk(
         const refreshToken = localStorage.getItem('refresh_token');
         const body = JSON.stringify({ token : refreshToken })
         try {
-            const res = await fetch('http://127.0.0.1:8000/api/token/refresh/', {
+            const res = await fetch(`${BASE_URL}/api/token/refresh/`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

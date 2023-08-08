@@ -1,11 +1,12 @@
 import axios from 'axios';
+import {BASE_URL} from '../config';
 
 const notificationsSeenApi = async (notificationId) => {
   try {
     const accessToken = localStorage.getItem('access_token');
     let body = {}
 
-    const response = await axios.post(`http://localhost:8000/post/notifications-seen/${notificationId}/`, body, {
+    const response = await axios.post(`${BASE_URL}/post/notifications-seen/${notificationId}/`, body, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,

@@ -50,7 +50,6 @@ const Navbar = () => {
     const fetchData = async () => {
       try {
         const data = await getNotificationsApi();
-        console.log(data)
         setNotificationCount(data.length);
       } catch (error) {
         console.error(error);
@@ -63,7 +62,7 @@ const Navbar = () => {
       if (user) {
           fetchData();
       }
-    }, 5 * 1000);
+    },5 * 60 * 1000);
     return () => clearInterval(intervalId);
   }, [user]);
 

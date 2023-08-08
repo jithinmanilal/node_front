@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BASE_URL } from '../config'
 
 const createCommentApi = async (postId, content) => {
   try {
@@ -7,7 +8,7 @@ const createCommentApi = async (postId, content) => {
     const formData = new FormData();
     formData.append('body', content);
 
-    const response = await axios.post(`http://localhost:8000/post/${postId}/comment/`, formData, {
+    const response = await axios.post(`${BASE_URL}/post/${postId}/comment/`, formData, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,

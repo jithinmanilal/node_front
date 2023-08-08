@@ -44,7 +44,7 @@ const PostsModal = ({ isVisible, onClose, postId }) => {
   return (
     <div
       id="wrapper"
-      className="fixed inset-0 bg-black bg-opacity-50 z-10 backdrop:blur-md flex justify-center items-center"
+      className="fixed inset-0 bg-black bg-opacity-50 z-10 p-2 backdrop:blur-md flex justify-center items-center"
       onClick={handleClose}
     >
       <div className="w-[600px] flex flex-col">
