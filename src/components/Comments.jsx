@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { BASE_URL } from '../config';
 
 const Comments = ({ comments }) => {
   const [timeAgo, setTimeAgo] = useState('');
@@ -27,6 +28,13 @@ const Comments = ({ comments }) => {
     }
   }, [comments]);
 
+  const constructImageUrl = (imgPath) => {
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+    return `${BASE_URL}${imgPath}`;
+  };
+
   return (
     <div className="text-sm flex p-4 me-2 ms-2 mb-2 bg-white border">
       {comments && comments.length > 0 ? (
@@ -35,7 +43,7 @@ const Comments = ({ comments }) => {
             <div className="comment-img">
               <img
                 className="w-10 rounded-full me-3"
-                src={comment.user.profile_image}
+                src={constructImageUrl(comment.user.profile_image)}
                 alt="Comment profile"
               />
             </div>

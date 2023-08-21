@@ -1,36 +1,38 @@
 import React, { useState } from "react";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import createPostApi from "../api/createPostApi";
 import updatePostApi from "../api/updatePostApi";
 
 const PostsModal = ({ isVisible, onClose, postId }) => {
+  const [postImage, setPostImage] = useState(null);
   const [content, setContent] = useState("");
-  const [postImage, setPostImage] = useState();
+  const [tags, setTags] = useState("");
+
   if (!isVisible) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (postId) {
       try {
-        await updatePostApi(postId, content, postImage);
+        await updatePostApi(postId, content, postImage, tags);
         onClose();
-        toast.success('Post Updated successfully!', {
+        toast.success("Post Updated successfully!", {
           position: "top-center",
         });
       } catch (error) {
-        toast.error('Failure, Post not Updated!', {
+        toast.error("Failure, Post not Updated!", {
           position: "top-center",
         });
       }
     } else {
       try {
-        await createPostApi(content, postImage);
+        await createPostApi(content, postImage, tags);
         onClose();
-        toast.success('Post Created successfully!', {
+        toast.success("Post Created successfully!", {
           position: "top-center",
         });
       } catch (error) {
-        toast.error('Failure, Post not Created!', {
+        toast.error("Failure, Post not Created!", {
           position: "top-center",
         });
       }
@@ -61,7 +63,7 @@ const PostsModal = ({ isVisible, onClose, postId }) => {
                 for="formFileSm"
                 className="mb-2 inline-block text-grey-700 text-lg dark:text-neutral-200"
               >
-                { postId ? "Update Post" : "Upload Post" }
+                {postId ? "Update Post" : "Upload Post"}
               </label>
               <div className="pt-2 text-white flex items-start">
                 <label for="formFileSm" className="ms-4 cursor-pointer">
@@ -92,13 +94,27 @@ const PostsModal = ({ isVisible, onClose, postId }) => {
                 Description
               </label>
             </div>
+            <div className="mb-3">
+              <label
+                htmlFor="tags"
+                className="mb-2 inline-block text-grey-700 text-lg dark:text-neutral-200"
+              >
+                Tags
+              </label>
+              <input
+                id="tags"
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="block w-full px-3 py-2 border text-neutral-200 rounded bg-transparent focus:outline-none focus:border-primary"
+                placeholder="Enter tags separated by commas"
+              />
+            </div>
             <button
               type="submit"
               className="inline-block rounded-full bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white border"
             >
-              <span class="material-symbols-outlined">
-                upload
-              </span>
+              <span class="material-symbols-outlined">upload</span>
             </button>
           </form>
         </div>

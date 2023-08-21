@@ -1,38 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
 
-import getNotificationsApi from '../api/getNotificationsApi';
 import notificationsSeenApi from '../api/notificationsSeenApi';
 import { useNavigate } from 'react-router-dom';
 
-const NotificationDropdown = ({ toggleNotification, updateCount }) => {
-    const { user } = useSelector(state => state.user);
-    const [notes, setNotes] = useState([]);
+const NotificationDropdown = ({ toggleNotification, notes, removeNotification }) => {
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getNotificationsApi();
-                setNotes(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        if (user) {
-            fetchData();
-        }
-        // const intervalId = setInterval(() => {
-        //     if (user) {
-        //         fetchData();
-        //     }
-        // }, 5 * 1000);
-        // return () => clearInterval(intervalId);
-    }, [user]);
-
-    useEffect(() => {
-        updateCount(notes.length);
-      }, [notes, updateCount]);
+    console.log(notes);
 
     const getNotificationMessage = (notification) => {
         const { notification_type, post, comment } = notification;
@@ -56,11 +29,27 @@ const NotificationDropdown = ({ toggleNotification, updateCount }) => {
         return "has started following you";
     };
 
-    const onClick = async (notificationId, email) => {
+    const onClick = async (notificationId, email, notificationType, postId) => {
         try {
             await notificationsSeenApi(notificationId)
+            removeNotification(notificationId);
             toggleNotification();
-            navigate(`/profile/${email}` );
+            if (notificationType === "like") {
+                // Redirect to the liked post page
+                // navigate(`/post/${postId}`);
+            } else if (notificationType === "comment") {
+                // Redirect to the commented post page
+                // navigate(`/post/${postId}`);
+            } else if (notificationType === "post") {
+                // Redirect to the new post page
+                // navigate(`/post/${postId}`);
+            } else if (notificationType === "blocked") {
+                // Redirect to a special "blocked" page
+                // navigate(`/blocked`);
+            } else {
+                // Default redirection (e.g., profile or a general landing page)
+                navigate(`/profile/${email}`);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -74,7 +63,7 @@ const NotificationDropdown = ({ toggleNotification, updateCount }) => {
         <div id="wrapper" onClick={handleClose}>
             <div>
                 <ul
-                    className="absolute left-auto right-48 z-[10] float-left m-0 mt-7 min-w-max list-none overflow-hidden rounded-lg border-none bg-white text-[#4d2c4d] bg-clip-padding text-left text-base shadow-lg [&[data-te-dropdown-show]]:block"
+                    className="absolute left-auto right-0 z-[10] float-left m-0 mt-10 min-w-max list-none overflow-hidden rounded-lg border-none bg-white text-[#4d2c4d] bg-clip-padding text-left text-base shadow-lg [&[data-te-dropdown-show]]:block"
                     aria-labelledby="dropdownMenuButton1"
                     data-te-dropdown-menu-ref
                 >
@@ -83,7 +72,7 @@ const NotificationDropdown = ({ toggleNotification, updateCount }) => {
                             <li key={index}>
                                 <p
                                     className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm public hover:bg-neutral-100 active:no-underline cursor-pointer"
-                                    onClick={() => onClick(note.id, note.from_user.email)}
+                                    onClick={() => onClick(note.id, note.from_user.email, note.notification_type, note.id )}
                                     data-te-dropdown-item-ref
                                 >
                                     {note.notification_type === "blocked"

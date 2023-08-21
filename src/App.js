@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AboutPage from './pages/AboutPage';
 import PostsPage from './pages/PostsPage';
+import MessagesPage from './pages/MessagesPage';
 import MyNetworksPage from './pages/MyNetworksPage';
 
 import AdminLogin from './pages/AdminLogin';
@@ -19,6 +20,7 @@ import BlockedPage from './pages/BlockedPage';
 
 import NotFoundPage from './pages/NotFoundPage';
 import ReportedPage from './pages/ReportedPage';
+import PostDetailPage from './pages/PostDetailPage';
 
 
 function App() {
@@ -45,8 +47,11 @@ function App() {
         <Route path='/' element={< LoginPage/>} />
         <Route path='/profile/:email' element={< Dashboard/>} />
         <Route path='/register' element={< RegisterPage/>} />
+        <Route path='/messages' element={< MessagesPage/>} />
         <Route path='/about' element={< AboutPage/>} />
         <Route path='/home' element={< PostsPage/>} />
+        <Route path='/home/:search' element={< PostsPage/>} />
+        <Route path='/post/:postId' element={< PostDetailPage/>} />
         <Route path='/network' element={< MyNetworksPage/>} />
 
         <Route path='/admin-login' element={< AdminLogin/>} />

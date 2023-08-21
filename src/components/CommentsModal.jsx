@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 import createCommentApi from '../api/createCommentApi';
 import deleteCommentApi from '../api/deleteCommentApi';
+import { BASE_URL } from '../config';
 
 const CommentsModal = ({ postId, isVisible, onClose, comments }) => {
   const { user } = useSelector(state => state.user);
@@ -39,12 +40,20 @@ const CommentsModal = ({ postId, isVisible, onClose, comments }) => {
     }
   }, [comments]);
 
+  const constructImageUrl = (imgPath) => {
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+    return `${BASE_URL}${imgPath}`;
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createCommentApi(postId, content);
       onClose();
-      toast.success('Post Updated successfully!', {
+      toast.success('Comment posted successfully!', {
         position: "top-center",
       });
     } catch (error) {
@@ -83,7 +92,7 @@ const CommentsModal = ({ postId, isVisible, onClose, comments }) => {
                   <div className="comment-img">
                     <img
                       className="w-10 rounded-full me-3"
-                      src={comment.user.profile_image}
+                      src={constructImageUrl(comment.user.profile_image)}
                       alt="Comment profile"
                     />
                   </div>

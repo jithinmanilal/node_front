@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
-import postapi from '../api/postapi';
-import likePostApi from '../api/likePostApi';
-import deletePostApi from '../api/deletePostApi';
-import followUserApi from '../api/followUserApi';
-import reportPostApi from '../api/reportPostApi';
+import postapi from "../api/postapi";
+import likePostApi from "../api/likePostApi";
+import deletePostApi from "../api/deletePostApi";
+import followUserApi from "../api/followUserApi";
+import reportPostApi from "../api/reportPostApi";
+import searchPostApi from "../api/searchPostApi";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import PostsLayout from '../components/PostsLayout';
-import PostsModal from '../components/PostsModal';
-import Comments from '../components/Comments';
-import CommentsModal from '../components/CommentsModal';
-import Dropdown from '../components/DropDown';
-import PostPageModal from '../components/PostPageModal';
-
+import PostsLayout from "../components/PostsLayout";
+import PostsModal from "../components/PostsModal";
+import Comments from "../components/Comments";
+import CommentsModal from "../components/CommentsModal";
+import Dropdown from "../components/DropDown";
+import PostPageModal from "../components/PostPageModal";
+import { BASE_URL } from "../config";
 
 const PostsPage = () => {
-  const { loading, user } = useSelector(state => state.user);
+  const { loading, user } = useSelector((state) => state.user);
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
@@ -28,69 +29,89 @@ const PostsPage = () => {
   const [comments, setComments] = useState([]);
   const [postId, setPostId] = useState(null);
   const navigate = useNavigate();
+  const { search } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await postapi();
-        setPosts(data);
+        let data;      
+      if (search) {
+        console.log(search);
+        data = await searchPostApi(search);
+      } else {
+        data = await postapi();
+      }
+      setPosts(data);
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     if (user) {
       fetchData();
-    } 
-  }, [user]);
+    }
+  }, [user, search]);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="inline-block animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-8 w-8 align-[0.125em] text-danger" role="status">
-          <span className="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0" style={{ clip: 'rect(0,0,0,0)' }}>Loading...</span>
+        <div
+          className="inline-block animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-8 w-8 align-[0.125em] text-danger"
+          role="status"
+        >
+          <span
+            className="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0"
+            style={{ clip: "rect(0,0,0,0)" }}
+          >
+            Loading...
+          </span>
         </div>
       </div>
     );
   }
 
-  
+  const constructImageUrl = (imgPath) => {
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+    return `${BASE_URL}${imgPath}`;
+  };
+
   const handleDeletePost = async (postId) => {
     try {
       await deletePostApi(postId, fetchData);
-      toast.success('Post Deleted successfully!', {
+      toast.success("Post Deleted successfully!", {
         position: "top-center",
       });
     } catch (error) {
-      toast.error('Failure, Post not Deleted!', {
+      toast.error("Failure, Post not Deleted!", {
         position: "top-center",
       });
     }
   };
-  
+
   const handleUpdatePost = (postId) => {
     setShowModal(true);
-    setPostId(postId); 
+    setPostId(postId);
   };
 
   const handlePostClick = (postId) => {
-    setPostId(postId);
-    setShowPostModal(true);
+    navigate(`/post/${postId}`);
   };
 
   const handleReportPost = async (postId) => {
     try {
       await reportPostApi(postId, fetchData);
-      toast.success('Post Reported successfully!', {
+      toast.success("Post Reported successfully!", {
         position: "top-center",
       });
     } catch (err) {
-      toast.error('Failure, Post not Reported!', {
+      toast.error("Failure, Post not Reported!", {
         position: "top-center",
       });
     }
   };
-  
+
   const closeModal = () => {
     setShowModal(false);
     setPostId(null);
@@ -105,7 +126,7 @@ const PostsPage = () => {
     setComments(comments);
     setPostId(postId);
     setShowCommentsModal(true);
-  }
+  };
 
   const closeCommentsModal = () => {
     setShowCommentsModal(false);
@@ -115,11 +136,11 @@ const PostsPage = () => {
   const handleToggleLikePost = async (postId) => {
     try {
       await likePostApi(postId, fetchData);
-      toast.success('Post Like toggled successfully!', {
+      toast.success("Post Like toggled successfully!", {
         position: "top-center",
       });
     } catch (error) {
-      toast.error('Failure, Post not Liked!', {
+      toast.error("Failure, Post not Liked!", {
         position: "top-center",
       });
     }
@@ -128,11 +149,11 @@ const PostsPage = () => {
   const handleToggleFollow = async (userId) => {
     try {
       await followUserApi(userId, fetchData);
-      toast.success('User follow toggled successfully!', {
+      toast.success("User follow toggled successfully!", {
         position: "top-center",
       });
     } catch (error) {
-      toast.error('Failure, User not Followed!', {
+      toast.error("Failure, User not Followed!", {
         position: "top-center",
       });
     }
@@ -147,14 +168,18 @@ const PostsPage = () => {
       console.error(error);
     }
   };
-  
+
   const profileView = (email) => {
     navigate(`/profile/${email}`);
-  }
+  };
 
   return (
     <PostsLayout title="NextNode | Home" content="Home page">
-      <PostPageModal isVisible={showPostModal} onClose={closePostModal} postId={postId}  />
+      <PostPageModal
+        isVisible={showPostModal}
+        onClose={closePostModal}
+        postId={postId}
+      />
       <PostsModal isVisible={showModal} onClose={closeModal} postId={postId} />
       <div className="mt-28 rajdhani">
         {posts ? (
@@ -170,7 +195,10 @@ const PostsPage = () => {
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center">
-                    <h5 onClick={() => profileView(post.author.email)} className="mb-2 ms-2 mt-2 text-xl font-bold cursor-pointer leading-tight text-[#4b2848]">
+                    <h5
+                      onClick={() => profileView(post.author.email)}
+                      className="mb-2 ms-2 mt-2 text-xl font-bold cursor-pointer leading-tight text-[#4b2848]"
+                    >
                       {post.author.first_name} {post.author.last_name}
                     </h5>
                     {post.author.email !== user.email &&
@@ -189,7 +217,13 @@ const PostsPage = () => {
                         >
                           <span class="material-symbols-outlined">person_remove</span>
                         </button> */}
-                          <p title='Following' className='text-xs border-2 rounded-md m-2 p-1'> Following</p>
+                          <p
+                            title="Following"
+                            className="text-xs border-2 rounded-md m-2 p-1"
+                          >
+                            {" "}
+                            Following
+                          </p>
                         </>
                       ) : (
                         <button
@@ -216,18 +250,32 @@ const PostsPage = () => {
                     />
                   </div>
                 </div>
-                  <img
-                  onClick={()=>handlePostClick(post.id)}
-                    className="rounded-lg mx-auto cursor-pointer"
-                    src={post.post_img}
-                    alt=""
-                    />
+                <img
+                  onClick={() => handlePostClick(post.id)}
+                  className="rounded-lg mx-auto cursor-pointer"
+                  src={constructImageUrl(post.post_img)}
+                  alt=""
+                />
               </div>
               <div className="p-6">
-                <p className="mb-4 text-lg raleway text-left font-semibold tooltip text-[#4b2848] ">{post.content}</p>
+                <p className="mb-4 text-lg raleway text-left font-semibold tooltip text-[#4b2848] ">
+                  {post.content}
+                </p>
+                {post.tags && post.tags.length > 0 && (
+                  <div className="mb-4 text-lg raleway text-left font-semibold tooltip text-[#4b2848]">
+                    Tags:{" "}
+                    {post.tags.map((tag, index) => (
+                      <span key={index} className="tag text-sm font-medium">
+                        #{tag}&nbsp;
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="flex items-center mb-4">
                   <p className="mr-2 raleway text-base">
-                    Likes: &nbsp; <span className='tektur'>{post.likes_count ?? 0}</span> &nbsp;
+                    Likes: &nbsp;{" "}
+                    <span className="tektur">{post.likes_count ?? 0}</span>{" "}
+                    &nbsp;
                   </p>
 
                   {post.likes.includes(user.id) ? (

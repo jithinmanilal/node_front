@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { BASE_URL } from '../config';
 
-const createPostApi = async (content, postImage) => {
+const createPostApi = async (content, postImage, tags) => {
   try {
     const accessToken = localStorage.getItem('access_token');
 
     const formData = new FormData();
     formData.append('content', content);
     formData.append('post_img', postImage);
+    if (tags) formData.append('tags', tags);
 
     const response = await axios.post(`${BASE_URL}/post/create-post/`, formData, {
       headers: {
