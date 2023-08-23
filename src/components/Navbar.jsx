@@ -77,7 +77,8 @@ const Navbar = () => {
 
       socket.onmessage = (event) => {
         const newNotification = JSON.parse(event.data);
-        if (event.type === 'notification') {
+        console.log(newNotification);
+        if (newNotification.type === 'notification') {
           setNotification((prevNotifications) => [...prevNotifications, newNotification.payload]);
         }
       };

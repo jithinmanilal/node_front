@@ -18,13 +18,16 @@ import Comments from "../components/Comments";
 import CommentsModal from "../components/CommentsModal";
 import Dropdown from "../components/DropDown";
 import PostPageModal from "../components/PostPageModal";
+import InterestsModal from "../components/InterestsModal";
+import UnsplashPage from "../pages/UnsplashPage";
 import { BASE_URL } from "../config";
 
 const PostsPage = () => {
-  const { loading, user } = useSelector((state) => state.user);
+  const { loading, user, isAuthenticated } = useSelector((state) => state.user);
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [showInterestsModal, setShowInterestsModal] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [comments, setComments] = useState([]);
   const [postId, setPostId] = useState(null);
@@ -51,6 +54,12 @@ const PostsPage = () => {
       fetchData();
     }
   }, [user, search]);
+
+  useEffect(() => {
+    if (user?.set_interest === false) {
+      setShowInterestsModal(true);
+    }
+  }, [user]);
 
   if (loading) {
     return (
@@ -79,7 +88,7 @@ const PostsPage = () => {
 
   const handleDeletePost = async (postId) => {
     try {
-      await deletePostApi(postId, fetchData);
+      await deletePostApi(postId);
       toast.success("Post Deleted successfully!", {
         position: "top-center",
       });
@@ -101,7 +110,7 @@ const PostsPage = () => {
 
   const handleReportPost = async (postId) => {
     try {
-      await reportPostApi(postId, fetchData);
+      await reportPostApi(postId);
       toast.success("Post Reported successfully!", {
         position: "top-center",
       });
@@ -133,9 +142,27 @@ const PostsPage = () => {
     setPostId(null);
   };
 
-  const handleToggleLikePost = async (postId) => {
+  const handleToggleLikePost = async (postId, isLiked) => {
     try {
-      await likePostApi(postId, fetchData);
+      await likePostApi(postId);
+  
+      // Update the like count for the specific post
+      const updatedPosts = posts.map((post) => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            likes: isLiked
+              ? post.likes.filter((likeUserId) => likeUserId !== user.id)
+              : [...post.likes, user.id],
+            likes_count: isLiked
+              ? post.likes_count - 1 
+              : post.likes_count + 1,
+          };
+        }
+        return post;
+      });
+  
+      setPosts(updatedPosts);
       toast.success("Post Like toggled successfully!", {
         position: "top-center",
       });
@@ -148,7 +175,7 @@ const PostsPage = () => {
 
   const handleToggleFollow = async (userId) => {
     try {
-      await followUserApi(userId, fetchData);
+      await followUserApi(userId);
       toast.success("User follow toggled successfully!", {
         position: "top-center",
       });
@@ -159,19 +186,13 @@ const PostsPage = () => {
     }
   };
 
-  const fetchData = async () => {
-    try {
-      setPosts([]);
-      const data = await postapi();
-      setPosts(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const profileView = (email) => {
     navigate(`/profile/${email}`);
   };
+
+  if (!isAuthenticated) {
+    navigate('/');
+  }
 
   return (
     <PostsLayout title="NextNode | Home" content="Home page">
@@ -181,6 +202,7 @@ const PostsPage = () => {
         postId={postId}
       />
       <PostsModal isVisible={showModal} onClose={closeModal} postId={postId} />
+      <InterestsModal isVisible={showInterestsModal} onClose={() => setShowInterestsModal(false)} />
       <div className="mt-28 rajdhani">
         {posts ? (
           posts.map((post) => (
@@ -296,7 +318,7 @@ const PostsPage = () => {
                       className="inline-block mr-2 rounded-full bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                       data-te-ripple-init
                       data-te-ripple-color="light"
-                      onClick={() => handleToggleLikePost(post.id, true)}
+                      onClick={() => handleToggleLikePost(post.id, false)}
                     >
                       <span className="material-symbols-outlined">
                         thumb_up
@@ -322,6 +344,7 @@ const PostsPage = () => {
           <p>No posts available.</p>
         )}
       </div>
+      <UnsplashPage />
       <CommentsModal
         key={postId}
         postId={postId}

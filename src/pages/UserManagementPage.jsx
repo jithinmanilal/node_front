@@ -49,12 +49,12 @@ const UserManagementPage = () => {
                 <th className="px-4 py-2">Profile Image</th>
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">User Email</th>
-                <th className="px-4 py-2">Report</th>
+                {/* <th className="px-4 py-2">Report</th> */}
                 <th className="px-4 py-2">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {users.map((user) => (
+                {users?.map((user) => (
                 <tr key={user.id}>
                     <td className="px-4 py-2">
                     <img className="rounded-full w-12 mx-auto" src={user.profile_image} alt="Post" />
@@ -63,9 +63,9 @@ const UserManagementPage = () => {
                     {user.first_name} {user.last_name}
                     </td>
                     <td className="px-4 py-2">{user.email}</td>
-                    <td className="px-4 py-2">
+                    {/* <td className="px-4 py-2">
                     {user.reported_posts_count === 0 ? '-' : `${user.reported_posts_count} posts reported`}
-                    </td>
+                    </td> */}
                     <td className="px-4 py-2">
                     {user.is_superuser ? (
                         <button

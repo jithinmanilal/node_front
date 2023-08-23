@@ -83,7 +83,7 @@ const MyNetworksPage = () => {
                     className="inline-block ml-2 rounded-full bg-[#4b2848] text-white justify-start px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal"
                     data-te-ripple-init
                     data-te-ripple-color="light"
-                    title="Unfollow"
+                    title="Follow"
                     onClick={() => handleToggleFollow(follow.id)}
                   >
                     <span class="material-symbols-outlined">person_add</span>

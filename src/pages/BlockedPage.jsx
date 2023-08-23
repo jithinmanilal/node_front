@@ -49,7 +49,7 @@ const BlockedPage = () => {
             </tr>
           </thead>
           <tbody>
-            {posts.map((post) => (
+            {posts?.map((post) => (
               <tr key={post.id}>
                 <td className="px-4 py-2">
                   <img className="rounded-full cursor-pointer w-12" src={post.post_img} onClick={()=>handlePostClick(post.id)} alt="Post" />

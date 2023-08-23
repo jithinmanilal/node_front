@@ -25,7 +25,7 @@ const AdminLogin = () => {
     e.preventDefault();
     try {
       dispatch(login({ email, password }));
-      navigate('/admin');
+      navigate('/admin/post');
     } catch (error) {
       alert('Login Failed!')
     }

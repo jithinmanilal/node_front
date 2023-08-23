@@ -36,13 +36,13 @@ const NotificationDropdown = ({ toggleNotification, notes, removeNotification })
             toggleNotification();
             if (notificationType === "like") {
                 // Redirect to the liked post page
-                // navigate(`/post/${postId}`);
+                navigate(`/post/${postId}`);
             } else if (notificationType === "comment") {
                 // Redirect to the commented post page
-                // navigate(`/post/${postId}`);
+                navigate(`/post/${postId}`);
             } else if (notificationType === "post") {
                 // Redirect to the new post page
-                // navigate(`/post/${postId}`);
+                navigate(`/post/${postId}`);
             } else if (notificationType === "blocked") {
                 // Redirect to a special "blocked" page
                 // navigate(`/blocked`);
@@ -72,7 +72,7 @@ const NotificationDropdown = ({ toggleNotification, notes, removeNotification })
                             <li key={index}>
                                 <p
                                     className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm public hover:bg-neutral-100 active:no-underline cursor-pointer"
-                                    onClick={() => onClick(note.id, note.from_user.email, note.notification_type, note.id )}
+                                    onClick={() => onClick(note.id, note.from_user.email, note.notification_type, note.post.id )}
                                     data-te-dropdown-item-ref
                                 >
                                     {note.notification_type === "blocked"

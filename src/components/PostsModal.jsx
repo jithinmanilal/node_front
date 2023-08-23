@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import createPostApi from "../api/createPostApi";
 import updatePostApi from "../api/updatePostApi";
+import { useNavigate } from "react-router-dom";
 
 const PostsModal = ({ isVisible, onClose, postId }) => {
   const [postImage, setPostImage] = useState(null);
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
+  const navigate = useNavigate();
 
   if (!isVisible) return null;
 
@@ -15,6 +17,7 @@ const PostsModal = ({ isVisible, onClose, postId }) => {
     if (postId) {
       try {
         await updatePostApi(postId, content, postImage, tags);
+        navigate(`/post/${postId}`);
         onClose();
         toast.success("Post Updated successfully!", {
           position: "top-center",
@@ -26,7 +29,9 @@ const PostsModal = ({ isVisible, onClose, postId }) => {
       }
     } else {
       try {
-        await createPostApi(content, postImage, tags);
+        const data = await createPostApi(content, postImage, tags);
+        navigate(`/post/${data.id}`);
+        console.log(data);
         onClose();
         toast.success("Post Created successfully!", {
           position: "top-center",

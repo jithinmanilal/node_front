@@ -8,7 +8,7 @@ const createPostApi = async (content, postImage, tags) => {
     const formData = new FormData();
     formData.append('content', content);
     formData.append('post_img', postImage);
-    if (tags) formData.append('tags', tags);
+    formData.append('tags', tags);
 
     const response = await axios.post(`${BASE_URL}/post/create-post/`, formData, {
       headers: {
