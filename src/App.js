@@ -11,6 +11,9 @@ import AboutPage from './pages/AboutPage';
 import PostsPage from './pages/PostsPage';
 import MessagesPage from './pages/MessagesPage';
 import MyNetworksPage from './pages/MyNetworksPage';
+import PostDetailPage from './pages/PostDetailPage';
+import SettingsPage from './pages/SettingsPage';
+import SettingInterestsPage from './pages/SettingInterestsPage';
 
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
@@ -20,7 +23,7 @@ import BlockedPage from './pages/BlockedPage';
 
 import NotFoundPage from './pages/NotFoundPage';
 import ReportedPage from './pages/ReportedPage';
-import PostDetailPage from './pages/PostDetailPage';
+
 
 
 function App() {
@@ -53,6 +56,8 @@ function App() {
         <Route path='/home/:search' element={< PostsPage/>} />
         <Route path='/post/:postId' element={< PostDetailPage/>} />
         <Route path='/network' element={< MyNetworksPage/>} />
+        <Route path='/settings' element={< SettingsPage/>} />
+        <Route path='/settings/profile' element={<SettingInterestsPage />} />
 
         <Route path='/admin-login' element={< AdminLogin/>} />
         <Route path='/admin' element={< AdminDashboard/>} />

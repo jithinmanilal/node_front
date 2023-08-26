@@ -87,15 +87,18 @@ const PostsPage = () => {
   };
 
   const handleDeletePost = async (postId) => {
-    try {
-      await deletePostApi(postId);
-      toast.success("Post Deleted successfully!", {
-        position: "top-center",
-      });
-    } catch (error) {
-      toast.error("Failure, Post not Deleted!", {
-        position: "top-center",
-      });
+    const shouldDelete = window.confirm("Are you sure you want to delete this post?");
+    if (shouldDelete) {
+      try {      
+        await deletePostApi(postId);
+        toast.success("Post Deleted successfully!", {
+          position: "top-center",
+        });
+      } catch (error) {
+        toast.error("Failure, Post not Deleted!", {
+          position: "top-center",
+        });
+      }
     }
   };
 

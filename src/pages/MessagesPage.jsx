@@ -3,16 +3,20 @@ import { useSelector } from "react-redux";
 
 import PostsLayout from "../components/PostsLayout";
 import contactListApi from "../api/contactListApi";
-import createChatRoomApi from "../api/createChatRoomApi";
 import getChatMessages from "../api/getChatMessages";
+import messageSeenApi from "../api/messageSeenApi";
+
+import { BASE_URL } from "../config";
+import { useNavigate } from "react-router-dom";
 
 const MessagesPage = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const [profiles, setProfiles] = useState([]);
   const [ws, setWs] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [bg, setBg] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,33 +36,42 @@ const MessagesPage = () => {
     if (ws) {
       ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        setMessages((prevMessages) => [...prevMessages, message]); // Add new message to messages state
+        setMessages((prevMessages) => [...prevMessages, message]);
       };
     }
   }, [ws]);
 
   const handleSendMessage = () => {
     if (ws && inputMessage.trim() !== "") {
-      ws.send(JSON.stringify({ message: inputMessage })); // Send message to WebSocket server
-      setInputMessage(""); // Clear input
+      ws.send(JSON.stringify({ message: inputMessage }));
+      setInputMessage("");
     }
   };
 
-  const joinChatroom = async (userId) => {
+  const joinChatroom = async (chatroomId, userId) => {
     try {
       setBg(true);
-      const data = await createChatRoomApi(userId);
       const accessToken = localStorage.getItem("access_token");
       const websocketProtocol =
         window.location.protocol === "https:" ? "wss://" : "ws://";
-      const wsUrl = `${websocketProtocol}localhost:8000/ws/chat/${data.id}/?token=${accessToken}`;
+      const wsUrl = `${websocketProtocol}localhost:8000/ws/chat/${chatroomId}/?token=${accessToken}`;
       const newChatWs = new WebSocket(wsUrl);
 
       newChatWs.onopen = async () => {
         console.log("Chatroom WebSocket connection opened.");
         // Fetch previous messages when the WebSocket connection is opened
-        const previousMessages = await getChatMessages(data.id);
+        const previousMessages = await getChatMessages(chatroomId);
         setMessages(previousMessages);
+        await messageSeenApi(userId);
+        setProfiles((prevProfiles) => {
+          return prevProfiles.map((profile) => {
+            if (profile.id === chatroomId) {
+              // Set unseen_message_count to zero
+              return { ...profile, unseen_message_count: 0 };
+            }
+            return profile;
+          });
+        });
       };
       newChatWs.onclose = () => {
         console.log("Chatroom WebSocket connection closed.");
@@ -75,6 +88,10 @@ const MessagesPage = () => {
       console.error(error);
     }
   };
+
+  if (!isAuthenticated) {
+    navigate('/');
+};
 
   return (
     <PostsLayout>
@@ -146,26 +163,32 @@ const MessagesPage = () => {
           )}
         </div>
         <div className="w-2/5 mt-20 p-1 m-2 overflow-y-auto bg-white rounded-lg">
-          {profiles
-            ? profiles.map((profile) => (
-                <div
-                  key={profile.id}
-                  onClick={() => joinChatroom(profile.id)}
-                  class="flex items-center rounded-lg m-1 cursor-pointer bg-[#f2dfcf] p-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)"
-                >
-                  <img
-                    class="w-14 rounded-full mr-2"
-                    src={profile.profile_image}
-                    alt="profile"
-                  />
-                  <div>
-                    <h5 class="mb-1 text-sm font-medium leading-tight text-neutral-800">
-                      {profile.first_name} {profile.last_name}
-                    </h5>
+          {profiles ? (
+            profiles.map((profile) => (
+              <div
+                key={profile.id}
+                onClick={() => joinChatroom(profile.id, profile.members[0].id)}
+                className="relative flex items-center rounded-lg m-1 cursor-pointer bg-[#f2dfcf] p-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]"
+              >
+                {profile.unseen_message_count > 0 && (
+                  <div className="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 rounded-full">
+                    {profile.unseen_message_count}
                   </div>
+                )}
+
+                <img
+                  className="w-14 rounded-full mr-2"
+                  src={BASE_URL + profile.members[0].profile_image}
+                  alt="profile"
+                />
+                <div className="flex-grow">
+                  <h5 className="mb-1 text-sm font-medium leading-tight text-neutral-800 text-center">
+                    {profile.members[0].first_name} {profile.members[0].last_name}
+                  </h5>
                 </div>
-              ))
-            : null}
+              </div>
+            ))
+          ) : null}
         </div>
       </div>
     </PostsLayout>

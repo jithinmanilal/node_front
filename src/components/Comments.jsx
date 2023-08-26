@@ -36,7 +36,7 @@ const Comments = ({ comments }) => {
   };
 
   return (
-    <div className="text-sm flex p-4 me-2 ms-2 mb-2 bg-white border">
+    <div className="text-sm flex p-4 me-2 rounded-lg ms-2 mb-2 bg-white border">
       {comments && comments.length > 0 ? (
         comments.slice(comments.length - 1, comments.length).map((comment) => (
           <div key={comment.id} className='flex'>

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 const NotificationDropdown = ({ toggleNotification, notes, removeNotification }) => {
     const navigate = useNavigate();
-    console.log(notes);
 
     const getNotificationMessage = (notification) => {
         const { notification_type, post, comment } = notification;

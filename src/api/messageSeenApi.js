@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { BASE_URL } from '../config';
 
-const contactListApi = async () => {
+const messageSeenApi = async (userId) => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/chat/chatrooms/`, {
+    const response = await axios.get(`${BASE_URL}/chat/seen/${userId}/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -16,10 +16,9 @@ const contactListApi = async () => {
     } else {
         console.log(response.error)
     }
-    console.log(response.data);
   } catch (error) {
     console.error(error);
   }
 };
 
-export default contactListApi;
+export default messageSeenApi;

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import getTagsApi from "../api/getTagsApi";
-import createInterestApi from "../api/createInterestsApi";
+import createInterestsApi from "../api/createInterestsApi";
 
 const InterestsModal = ({ isVisible, onClose }) => {
   const { user } = useSelector((state) => state.user);
@@ -44,7 +44,7 @@ const InterestsModal = ({ isVisible, onClose }) => {
 
   const sendSelectedTags = async () => {
     try {
-      await createInterestApi(selectedTags);
+      await createInterestsApi(selectedTags);
       onClose();
       toast.success("Interests updated successfully!", {
         position: "top-center",
@@ -65,7 +65,7 @@ const InterestsModal = ({ isVisible, onClose }) => {
           X
         </button>
         <div className="bg-[#4b2848] p-2 karla rounded flex flex-wrap">
-          <form>
+          <form onSubmit={sendSelectedTags}>
             <h2 className="text-white text-lg">Select Your Interests</h2>
             <div className="flex flex-wrap">
               {tags && tags.length > 0 ? (
@@ -90,8 +90,7 @@ const InterestsModal = ({ isVisible, onClose }) => {
             </div>
 
             <button
-              type="button"
-              onClick={sendSelectedTags}
+              type="submit"
               className="mt-4 bg-[#4b2848] text-white px-4 py-2 border-white border rounded hover:bg-blue-700"
             >
               Save Interests

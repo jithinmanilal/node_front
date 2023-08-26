@@ -130,6 +130,9 @@ export const updateToken = createAsyncThunk(
     'users/refresh/',
     async (_, thunkApi) => {
         const refreshToken = localStorage.getItem('refresh_token');
+        if (!refreshToken) {
+            throw new Error('No refresh token found.');
+        }
         const body = JSON.stringify({ token : refreshToken })
         try {
             const res = await fetch(`${BASE_URL}/api/token/refresh/`, {

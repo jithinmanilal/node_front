@@ -11,7 +11,7 @@ const PostPageModal = ({ isVisible, onClose, postId }) => {
   const { user } = useSelector(state => state.user);
   const [post, setPost] = useState(null);
   const [content, setContent] = useState('');
-  const [comments, setComments] = useState(post?.comments || []);
+  const [comments, setComments] = useState([]);
 
 
   useEffect(() => {
