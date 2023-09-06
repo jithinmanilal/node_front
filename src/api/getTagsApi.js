@@ -4,7 +4,7 @@ import {BASE_URL} from '../config';
 const getTagsApi = async () => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/post/tags/`, {
+    const response = await axios.get(`${BASE_URL}/api/post/tags/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

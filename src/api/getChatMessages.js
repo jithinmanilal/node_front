@@ -4,7 +4,7 @@ import { BASE_URL } from '../config';
 const getChatMessages = async (roomId) => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/chat/chat-room/${roomId}/`, {
+    const response = await axios.get(`${BASE_URL}/api/chat/chat-room/${roomId}/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

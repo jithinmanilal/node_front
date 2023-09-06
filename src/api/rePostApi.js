@@ -1,19 +1,19 @@
 import axios from 'axios';
 import { BASE_URL } from '../config';
 
-const likePostApi = async (postId, fetchData) => {
+const rePostApi = async (postId, fetchData) => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    let body = {}
-    const response = await axios.post(`${BASE_URL}/api/post/like/${postId}/`,body,{
+
+    const response = await axios.delete(`${BASE_URL}/api/post/re-post/${postId}/`, {
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
     });
+
     if (response.status === 200) {
-      console.log('Post like toggled successfully');
+      console.log('Post deleted successfully');
       if (fetchData) {
         fetchData(); 
       }
@@ -25,4 +25,4 @@ const likePostApi = async (postId, fetchData) => {
   }
 };
 
-export default likePostApi;
+export default rePostApi;

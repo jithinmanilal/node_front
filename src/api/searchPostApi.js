@@ -4,7 +4,7 @@ import {BASE_URL} from '../config';
 const searchPostApi = async (search) => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/post/search/?tags=${search}`, {
+    const response = await axios.get(`${BASE_URL}/api/post/search/?tags=${search}`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

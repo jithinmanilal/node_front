@@ -5,7 +5,7 @@ const createChatRoomApi = async (userId) => {
   try {
     const accessToken = localStorage.getItem('access_token');
     let body = {}
-    const response = await axios.post(`${BASE_URL}/chat/create-room/${userId}/`,body,{
+    const response = await axios.post(`${BASE_URL}/api/chat/create-room/${userId}/`,body,{
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

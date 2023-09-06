@@ -5,7 +5,7 @@ const deleteCommentApi = async (commentId, fetchData) => {
   try {
     const accessToken = localStorage.getItem('access_token');
 
-    const response = await axios.delete(`${BASE_URL}/post/${commentId}/delete-comment/`, {
+    const response = await axios.delete(`${BASE_URL}/api/post/${commentId}/delete-comment/`, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,

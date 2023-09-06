@@ -8,7 +8,7 @@ const updateInterestsApi = async (selectedTags) => {
     const requestData = { interests: selectedTags };
 
     const response = await axios.put(
-      `${BASE_URL}/post/update-interests/`,
+      `${BASE_URL}/api/post/update-interests/`,
       requestData,
       {
         headers: {

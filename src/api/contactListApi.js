@@ -4,7 +4,7 @@ import { BASE_URL } from '../config';
 const contactListApi = async () => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/chat/chatrooms/`, {
+    const response = await axios.get(`${BASE_URL}/api/chat/chatrooms/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

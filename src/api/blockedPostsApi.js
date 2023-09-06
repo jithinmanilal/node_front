@@ -4,7 +4,7 @@ import { BASE_URL } from '../config';
 const blockedPostsApi = async () => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/post/blocked/`, {
+    const response = await axios.get(`${BASE_URL}/api/post/blocked/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

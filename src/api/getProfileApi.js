@@ -7,7 +7,7 @@ const getProfileApi = async (email) => {
 
     const body = {}
 
-    const response = await axios.post(`${BASE_URL}/post/profile/${email}/`, body, {
+    const response = await axios.post(`${BASE_URL}/api/post/profile/${email}/`, body, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,

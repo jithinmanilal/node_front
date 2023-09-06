@@ -7,7 +7,7 @@ const createInterestsApi = async (selectedTags) => {
 
     const requestData = { interests: selectedTags };
 
-    const response = await axios.post(`${BASE_URL}/post/interests/`, requestData, {
+    const response = await axios.post(`${BASE_URL}/api/post/interests/`, requestData, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,

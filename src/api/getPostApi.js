@@ -4,7 +4,7 @@ import { BASE_URL } from '../config';
 const getPostApi = async (postId) => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/post/view/${postId}/`, {
+    const response = await axios.get(`${BASE_URL}/api/post/view/${postId}/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

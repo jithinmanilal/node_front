@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import getUserPostsApi from "../api/getUserPostsApi";
 import deletePostApi from "../api/deletePostApi";
+import rePostApi from "../api/rePostApi";
 
 import Layout from "../components/Layout";
 import PostsModal from "../components/PostsModal";
@@ -69,6 +70,20 @@ const SettingsPage = () => {
       }
     }
   };
+
+  const handleRePost = async(postId) => {
+    try {      
+      await rePostApi(postId);
+      navigate(`/post/${postId}`);
+      toast.success("Reposted successfully!", {
+        position: "top-center",
+      });
+    } catch (error) {
+      toast.error("Failure, not Reposted!", {
+        position: "top-center",
+      });
+    }
+  }
 
   if (!isAuthenticated) {
     navigate("/");
@@ -162,6 +177,7 @@ const SettingsPage = () => {
                               {post.is_deleted ? (
                                 <button
                                 type="button"
+                                onClick={()=>handleRePost(post.id)}
                                 className="inline-block mx-auto rounded bg-lime-700 m-1 px-6 pb-2 pt-2.5 text-xs font-bold uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64]"
                               >
                                 Repost

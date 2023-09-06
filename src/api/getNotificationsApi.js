@@ -4,7 +4,7 @@ import { BASE_URL } from '../config';
 const getNotificationsApi = async () => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${BASE_URL}/post/notifications/`, {
+    const response = await axios.get(`${BASE_URL}/api/post/notifications/`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

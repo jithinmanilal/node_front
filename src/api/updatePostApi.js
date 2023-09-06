@@ -11,7 +11,7 @@ const updatePostApi = async (postId, content, postImage, tags, fetchData) => {
     if (postImage) formData.append('post_img', postImage);
 
 
-    const response = await axios.post(`${BASE_URL}/post/update-post/${postId}/`, formData, {
+    const response = await axios.post(`${BASE_URL}/api/post/update-post/${postId}/`, formData, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,
