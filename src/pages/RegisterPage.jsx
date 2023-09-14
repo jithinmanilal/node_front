@@ -34,7 +34,7 @@ const RegisterPage = () => {
       });
   };
 
-  if (registered) return <Navigate to='/login'/>;
+  if (registered) return <Navigate to='/'/>;
 
   return (
     <div className='container mx-auto bg-[#f9efeb]'>

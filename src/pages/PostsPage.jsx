@@ -193,9 +193,9 @@ const PostsPage = () => {
     navigate(`/profile/${email}`);
   };
 
-  if (!isAuthenticated) {
+  if (!loading && !isAuthenticated) {
     navigate('/');
-  }
+  };
 
   return (
     <PostsLayout title="NextNode | Home" content="Home page">

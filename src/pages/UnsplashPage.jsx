@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import getUnsplashApi from "../api/getUnsplashApi";
+import { useSelector } from "react-redux";
 
 const UnsplashPage = () => {
+  const { user } = useSelector(state => state.user);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -14,8 +16,10 @@ const UnsplashPage = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if(user) {
+      fetchData();
+    }
+  }, [user]);
 
   const handleLike = (postId) => {
     const updatedPosts = posts.map((post) => {

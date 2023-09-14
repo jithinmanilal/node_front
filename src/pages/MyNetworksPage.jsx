@@ -41,7 +41,7 @@ const MyNetworksPage = () => {
     if (user) {
       fetchData();
     } 
-  }, [user]);
+  }, [user, setFollows, setProfiles]);
 
   const fetchData = async () => {
     try {
