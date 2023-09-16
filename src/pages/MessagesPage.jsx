@@ -54,7 +54,7 @@ const MessagesPage = () => {
       const accessToken = localStorage.getItem("access_token");
       const websocketProtocol =
         window.location.protocol === "https:" ? "wss://" : "ws://";
-      const wsUrl = `${websocketProtocol}3.84.152.197/ws/chat/${chatroomId}/?token=${accessToken}`;
+      const wsUrl = `${websocketProtocol}www.cakesmiths.shop/ws/chat/${chatroomId}/?token=${accessToken}`;
       const newChatWs = new WebSocket(wsUrl);
 
       newChatWs.onopen = async () => {

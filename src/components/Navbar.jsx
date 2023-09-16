@@ -69,7 +69,7 @@ const Navbar = () => {
       const accessToken = localStorage.getItem("access_token");
       const websocketProtocol =
         window.location.protocol === "https:" ? "wss://" : "ws://";
-      const socket = new WebSocket(`${websocketProtocol}3.84.152.197/ws/notification/?token=${accessToken}`);
+      const socket = new WebSocket(`${websocketProtocol}www.cakesmiths.shop/ws/notification/?token=${accessToken}`);
 
       socket.onopen = () => {
         console.log("WebSocket connection established");
