@@ -47,6 +47,8 @@ const MyNetworksPage = () => {
     try {
       const data = await myNetworkApi();
       setFollows(data);
+      const result = await followingApi();
+      setProfiles(result); 
     } catch (error) {
       console.error(error);
     }

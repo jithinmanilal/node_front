@@ -1,14 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import createPostApi from "../api/createPostApi";
 import updatePostApi from "../api/updatePostApi";
+import getPostApi from "../api/getPostApi";
 import { useNavigate } from "react-router-dom";
 
 const PostsModal = ({ isVisible, onClose, postId }) => {
   const [postImage, setPostImage] = useState(null);
+  const [selectedImageURL, setSelectedImageURL] = useState(null);
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let data = await getPostApi(postId);
+        setTags(data.tags);
+        setContent(data.content);
+        setSelectedImageURL(data.post_img);
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (postId) {
+      fetchData();
+    }
+  }, [postId]);
 
   if (!isVisible) return null;
 
@@ -76,11 +96,23 @@ const PostsModal = ({ isVisible, onClose, postId }) => {
                   <input
                     class="hidden"
                     id="formFileSm"
-                    onChange={(e) => setPostImage(e.target.files[0])}
+                    onChange={(e) => {
+                      setPostImage(e.target.files[0]);
+                      setSelectedImageURL(
+                        URL.createObjectURL(e.target.files[0])
+                      );
+                    }}
                     type="file"
                   />
                 </label>
               </div>
+              {selectedImageURL && (
+                <img
+                  src={selectedImageURL}
+                  alt="Selected_Image"
+                  className="mt-2 mx-auto max-h-20 object-contain rounded-md"
+                />
+              )}
             </div>
             <div className="relative p-2 mb-3" data-te-input-wrapper-init>
               <textarea

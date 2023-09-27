@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import postapi from "../api/postapi";
 import likePostApi from "../api/likePostApi";
 import deletePostApi from "../api/deletePostApi";
-import followUserApi from "../api/followUserApi";
+// import followUserApi from "../api/followUserApi";
 import reportPostApi from "../api/reportPostApi";
 import searchPostApi from "../api/searchPostApi";
 
@@ -14,12 +14,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 import PostsLayout from "../components/PostsLayout";
 import PostsModal from "../components/PostsModal";
-import Comments from "../components/Comments";
+// import Comments from "../components/Comments";
 import CommentsModal from "../components/CommentsModal";
 import Dropdown from "../components/DropDown";
 import PostPageModal from "../components/PostPageModal";
 import InterestsModal from "../components/InterestsModal";
-import UnsplashPage from "../pages/UnsplashPage";
+// import UnsplashPage from "../pages/UnsplashPage";
 import { BASE_URL } from "../config";
 
 const PostsPage = () => {
@@ -39,7 +39,6 @@ const PostsPage = () => {
       try {
         let data;      
       if (search) {
-        console.log(search);
         data = await searchPostApi(search);
       } else {
         data = await postapi();
@@ -53,7 +52,7 @@ const PostsPage = () => {
     if (user) {
       fetchData();
     }
-  }, [user, search]);
+  }, [user, search, setShowModal, setComments]);
 
   useEffect(() => {
     if (user?.set_interest === false) {
@@ -134,11 +133,11 @@ const PostsPage = () => {
     setPostId(null);
   };
 
-  const handleClickComments = (postId, comments) => {
-    setComments(comments);
-    setPostId(postId);
-    setShowCommentsModal(true);
-  };
+  // const handleClickComments = (postId, comments) => {
+  //   setComments(comments);
+  //   setPostId(postId);
+  //   setShowCommentsModal(true);
+  // };
 
   const closeCommentsModal = () => {
     setShowCommentsModal(false);
@@ -176,18 +175,18 @@ const PostsPage = () => {
     }
   };
 
-  const handleToggleFollow = async (userId) => {
-    try {
-      await followUserApi(userId);
-      toast.success("User follow toggled successfully!", {
-        position: "top-center",
-      });
-    } catch (error) {
-      toast.error("Failure, User not Followed!", {
-        position: "top-center",
-      });
-    }
-  };
+  // const handleToggleFollow = async (userId) => {
+  //   try {
+  //     await followUserApi(userId);
+  //     toast.success("User follow toggled successfully!", {
+  //       position: "top-center",
+  //     });
+  //   } catch (error) {
+  //     toast.error("Failure, User not Followed!", {
+  //       position: "top-center",
+  //     });
+  //   }
+  // };
 
   const profileView = (email) => {
     navigate(`/profile/${email}`);
@@ -251,18 +250,25 @@ const PostsPage = () => {
                           </p>
                         </>
                       ) : (
-                        <button
-                          type="button"
-                          className="inline-block ml-2 rounded-full bg-transparent justify-start px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal]"
-                          data-te-ripple-init
-                          data-te-ripple-color="light"
-                          title="Follow"
-                          onClick={() => handleToggleFollow(post.author.id)}
-                        >
-                          <span class="material-symbols-outlined">
-                            person_add
-                          </span>
-                        </button>
+                        // <button
+                        //   type="button"
+                        //   className="inline-block ml-2 rounded-full bg-transparent justify-start px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal]"
+                        //   data-te-ripple-init
+                        //   data-te-ripple-color="light"
+                        //   title="Follow"
+                        //   onClick={() => handleToggleFollow(post.author.id)}
+                        // >
+                        //   <span class="material-symbols-outlined">
+                        //     person_add
+                        //   </span>
+                        // </button>
+                        <p
+                            title="Following"
+                            className="text-xs border-2 rounded-md m-2 p-1"
+                          >
+                            {" "}
+                            Not Following
+                          </p>
                       ))}
                   </div>
 
@@ -332,14 +338,14 @@ const PostsPage = () => {
               </div>
               <div className="mb-2">
                 <div className="text-lg flex ms-6">
-                  <strong
+                  {/* <strong
                     style={{ cursor: "pointer" }}
                     onClick={() => handleClickComments(post.id, post.comments)}
                   >
                     Comments:
-                  </strong>
+                  </strong> */}
                 </div>
-                <Comments comments={post.comments} />
+                {/* <Comments comments={post.comments} /> */}
               </div>
             </div>
           ))
@@ -347,7 +353,7 @@ const PostsPage = () => {
           <p>No posts available.</p>
         )}
       </div>
-      <UnsplashPage />
+      {/* <UnsplashPage /> */}
       <CommentsModal
         key={postId}
         postId={postId}

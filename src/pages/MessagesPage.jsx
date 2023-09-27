@@ -5,8 +5,9 @@ import PostsLayout from "../components/PostsLayout";
 import contactListApi from "../api/contactListApi";
 import getChatMessages from "../api/getChatMessages";
 import messageSeenApi from "../api/messageSeenApi";
+import createChatRoomApi from '../api/createChatRoomApi';
 
-import { BASE_URL } from "../config";
+// import { BASE_URL } from "../config";
 import { useNavigate } from "react-router-dom";
 
 const MessagesPage = () => {
@@ -48,24 +49,29 @@ const MessagesPage = () => {
     }
   };
 
-  const joinChatroom = async (chatroomId, userId) => {
+  const joinChatroom = async (userId) => {
     try {
-      setBg(true);
+      if (ws) {
+        ws.close();
+        setWs(null);
+      }
+      const data = await createChatRoomApi(userId);
       const accessToken = localStorage.getItem("access_token");
       const websocketProtocol =
         window.location.protocol === "https:" ? "wss://" : "ws://";
-      const wsUrl = `${websocketProtocol}www.cakesmiths.shop/ws/chat/${chatroomId}/?token=${accessToken}`;
+      const wsUrl = `${websocketProtocol}localhost:8000/ws/chat/${data.id}/?token=${accessToken}`;
       const newChatWs = new WebSocket(wsUrl);
+      setBg(true);
 
       newChatWs.onopen = async () => {
         console.log("Chatroom WebSocket connection opened.");
         // Fetch previous messages when the WebSocket connection is opened
-        const previousMessages = await getChatMessages(chatroomId);
+        const previousMessages = await getChatMessages(data.id);
         setMessages(previousMessages);
         await messageSeenApi(userId);
         setProfiles((prevProfiles) => {
           return prevProfiles.map((profile) => {
-            if (profile.id === chatroomId) {
+            if (profile.id === data.id) {
               // Set unseen_message_count to zero
               return { ...profile, unseen_message_count: 0 };
             }
@@ -167,7 +173,7 @@ const MessagesPage = () => {
             profiles.map((profile) => (
               <div
                 key={profile.id}
-                onClick={() => joinChatroom(profile.id, profile.members[0].id)}
+                onClick={() => joinChatroom(profile.id)}
                 className="relative flex items-center rounded-lg m-1 cursor-pointer bg-[#f2dfcf] p-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]"
               >
                 {profile.unseen_message_count > 0 && (
@@ -178,12 +184,12 @@ const MessagesPage = () => {
 
                 <img
                   className="w-14 rounded-full mr-2"
-                  src={BASE_URL + profile.members[0].profile_image}
+                  src={profile.profile_image}
                   alt="profile"
                 />
                 <div className="flex-grow">
                   <h5 className="mb-1 text-sm font-medium leading-tight text-neutral-800 text-center">
-                    {profile.members[0].first_name} {profile.members[0].last_name}
+                    {profile.first_name} {profile.last_name}
                   </h5>
                 </div>
               </div>

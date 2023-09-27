@@ -35,6 +35,7 @@ const PostDetailPage = () => {
       try {
         const data = await getPostApi(postId);
         setPost(data);
+        console.log(data.comments);
         setComments(data.comments);
       } catch (error) {
         console.error(error);
@@ -63,6 +64,18 @@ const PostDetailPage = () => {
       </div>
     );
   }
+
+  const fetchData = async () => {
+    try {
+      setPost(null);
+      setComments([]);
+      const data = await getPostApi(postId);
+      setPost(data);
+      setComments(data.comments);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const constructImageUrl = (imgPath) => {
     if (imgPath.startsWith("http://") || imgPath.startsWith("https://")) {
@@ -110,7 +123,8 @@ const PostDetailPage = () => {
     try {
       const newComment = await createCommentApi(postId, content);
       setComments((prevComments) => [...prevComments, newComment]);
-      toast.success("Post Updated successfully!", {
+      setContent("");
+      toast.success("Commented successfully!", {
         position: "top-center",
       });
     } catch (error) {
@@ -143,15 +157,7 @@ const PostDetailPage = () => {
   const handleToggleLikePost = async () => {
     try {
       await likePostApi(postId);
-      const currentUserLiked = post.likes.includes(user.id);
-      if (currentUserLiked) {
-        const newLikesArray = post.likes.filter((likeUserId) => likeUserId !== user.id);
-        const updatedPost = { ...post, likes: newLikesArray };
-        setPost(updatedPost);
-      } else {
-        const updatedPost = { ...post, likes: [...post.likes, user.id] };
-        setPost(updatedPost);
-      }
+      fetchData();
       toast.success("Post Like toggled successfully!", {
         position: "top-center",
       });
@@ -294,21 +300,14 @@ const PostDetailPage = () => {
                         x
                       </button>
                     )}
-                    <h3 className="text-lg font-bold">
+                    <h3 className="text-sm font-bold">
                       {comment.user.first_name} {comment.user.last_name}
                     </h3>
                     <p className="text-gray-700 rajdhani text-xs mb-2">
-                      Posted on{" "}
-                      {new Date(comment.created).toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        second: "numeric",
-                      })}
+                      Posted {" "}
+                      {comment.created} ago
                     </p>
-                    <p className="text-gray-700">{comment.body}</p>
+                    <p className="text-gray-700 text-lg">{comment.body}</p>
                   </div>
                 ))}
                 <form

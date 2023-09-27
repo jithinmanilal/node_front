@@ -35,12 +35,12 @@ function App() {
   }, [dispatch]);
 
   useEffect(()=> {
-    let thirtyMinutes = 1000 * 60 * 30
+    let timeDiff = 1000 * 60 * 85
     let interval = setInterval(() => {
       if (access) {
         dispatch(updateToken());
       }
-    }, thirtyMinutes)
+    }, timeDiff)
     return () => clearInterval(interval);
   }, [dispatch, access])
 

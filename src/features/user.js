@@ -235,9 +235,11 @@ const initialState = {
           .addCase(updateToken.pending, state => {
             state.loading = true;
           })
-          .addCase(updateToken.fulfilled, state => {
+          .addCase(updateToken.fulfilled, (state, action) => {
             state.loading = false;
             state.isAuthenticated = true;
+            state.accessToken = action.payload.access;
+            state.refreshToken = action.payload.refresh;
           })
           .addCase(updateToken.rejected, state => {
             state.loading = false;

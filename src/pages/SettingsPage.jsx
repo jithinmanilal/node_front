@@ -24,7 +24,6 @@ const SettingsPage = () => {
     const fetchData = async () => {
       try {
         const data = await getUserPostsApi();
-        console.log(data);
         setPosts(data);
       } catch (error) {
         console.error(error);
@@ -55,11 +54,22 @@ const SettingsPage = () => {
     setPostId(null);
   };
 
+  const fetchData = async () => {
+    try {
+      const data = await getUserPostsApi();
+      setPosts([])
+      setPosts(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleDeletePost = async (postId) => {
     const shouldDelete = window.confirm("Are you sure you want to delete this post?");
     if (shouldDelete) {
       try {      
         await deletePostApi(postId);
+        fetchData();
         toast.success("Post Deleted successfully!", {
           position: "top-center",
         });
@@ -188,7 +198,7 @@ const SettingsPage = () => {
                                 <>
                                   <button
                                     type="button"
-                                    onClick={handleUpdatePost}
+                                    onClick={()=>handleUpdatePost(post.id)}
                                     className="inline-block rounded bg-amber-600 m-1 px-4 py-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64]"
                                   >
                                     <span className="material-symbols-outlined">
