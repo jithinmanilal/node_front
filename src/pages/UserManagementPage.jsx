@@ -23,9 +23,20 @@ const UserManagementPage = () => {
     fetchData();
   }, []);
 
+  const fetchData = async () => {
+    try {
+      setUsers([]);
+      const data = await userListApi();
+      setUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleBlockUser = async (userId) => {
       try {
         await blockUserApi(userId);
+        fetchData();
         toast.success('User Blocked successfully!', {
             position: "top-right",
             theme: "dark",

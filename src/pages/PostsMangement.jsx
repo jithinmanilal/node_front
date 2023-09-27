@@ -7,8 +7,10 @@ import blockPostApi from '../api/blockPostApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PostPageModal from '../components/PostPageModal';
+import { useSelector } from 'react-redux';
 
 const PostsManagement = () => {
+  const { loading, user } = useSelector((state) => state.user);
   const [posts, setPosts] = useState([]);
   const [showPostModal, setShowPostModal] = useState(false);
   const [postId, setPostId] = useState(null);
@@ -23,8 +25,28 @@ const PostsManagement = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div
+          className="inline-block animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-8 w-8 align-[0.125em] text-danger"
+          role="status"
+        >
+          <span
+            className="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0"
+            style={{ clip: "rect(0,0,0,0)" }}
+          >
+            Loading...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   const handlePostClick = (postId) => {
     setPostId(postId);
