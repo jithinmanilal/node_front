@@ -5,7 +5,7 @@ import PostsLayout from "../components/PostsLayout";
 import contactListApi from "../api/contactListApi";
 import getChatMessages from "../api/getChatMessages";
 import messageSeenApi from "../api/messageSeenApi";
-import createChatRoomApi from '../api/createChatRoomApi';
+import createChatRoomApi from "../api/createChatRoomApi";
 
 // import { BASE_URL } from "../config";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +59,7 @@ const MessagesPage = () => {
       const accessToken = localStorage.getItem("access_token");
       const websocketProtocol =
         window.location.protocol === "https:" ? "wss://" : "ws://";
-      const wsUrl = `${websocketProtocol}localhost:8000/ws/chat/${data.id}/?token=${accessToken}`;
+      const wsUrl = `${websocketProtocol}${window.location.host}/ws/chat/${data.id}/?token=${accessToken}`;
       const newChatWs = new WebSocket(wsUrl);
       setBg(true);
 
@@ -96,8 +96,8 @@ const MessagesPage = () => {
   };
 
   if (!isAuthenticated) {
-    navigate('/');
-};
+    navigate("/");
+  }
 
   return (
     <PostsLayout>
@@ -169,32 +169,32 @@ const MessagesPage = () => {
           )}
         </div>
         <div className="w-2/5 mt-20 p-1 m-2 overflow-y-auto bg-white rounded-lg">
-          {profiles ? (
-            profiles.map((profile) => (
-              <div
-                key={profile.id}
-                onClick={() => joinChatroom(profile.id)}
-                className="relative flex items-center rounded-lg m-1 cursor-pointer bg-[#f2dfcf] p-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]"
-              >
-                {profile.unseen_message_count > 0 && (
-                  <div className="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 rounded-full">
-                    {profile.unseen_message_count}
-                  </div>
-                )}
+          {profiles
+            ? profiles.map((profile) => (
+                <div
+                  key={profile.id}
+                  onClick={() => joinChatroom(profile.id)}
+                  className="relative flex items-center rounded-lg m-1 cursor-pointer bg-[#f2dfcf] p-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]"
+                >
+                  {profile.unseen_message_count > 0 && (
+                    <div className="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 rounded-full">
+                      {profile.unseen_message_count}
+                    </div>
+                  )}
 
-                <img
-                  className="w-14 rounded-full mr-2"
-                  src={profile.profile_image}
-                  alt="profile"
-                />
-                <div className="flex-grow">
-                  <h5 className="mb-1 text-sm font-medium leading-tight text-neutral-800 text-center">
-                    {profile.first_name} {profile.last_name}
-                  </h5>
+                  <img
+                    className="w-14 rounded-full mr-2"
+                    src={profile.profile_image}
+                    alt="profile"
+                  />
+                  <div className="flex-grow">
+                    <h5 className="mb-1 text-sm font-medium leading-tight text-neutral-800 text-center">
+                      {profile.first_name} {profile.last_name}
+                    </h5>
+                  </div>
                 </div>
-              </div>
-            ))
-          ) : null}
+              ))
+            : null}
         </div>
       </div>
     </PostsLayout>

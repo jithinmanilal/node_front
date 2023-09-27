@@ -69,7 +69,8 @@ const Navbar = () => {
       const accessToken = localStorage.getItem("access_token");
       const websocketProtocol =
         window.location.protocol === "https:" ? "wss://" : "ws://";
-      const socket = new WebSocket(`${websocketProtocol}www.cakesmiths.shop/ws/notification/?token=${accessToken}`);
+      const wsURL = `${websocketProtocol}${window.location.host}/ws/notification/?token=${accessToken}`;
+      const socket = new WebSocket(wsURL);
 
       socket.onopen = () => {
         console.log("WebSocket connection established");
@@ -78,8 +79,11 @@ const Navbar = () => {
       socket.onmessage = (event) => {
         const newNotification = JSON.parse(event.data);
         console.log(newNotification);
-        if (newNotification.type === 'notification') {
-          setNotification((prevNotifications) => [...prevNotifications, newNotification.payload]);
+        if (newNotification.type === "notification") {
+          setNotification((prevNotifications) => [
+            ...prevNotifications,
+            newNotification.payload,
+          ]);
         }
       };
 
