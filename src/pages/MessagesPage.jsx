@@ -49,12 +49,22 @@ const MessagesPage = () => {
     }
   };
 
+  const closeWebSocket = () => {
+    return new Promise((resolve) => {
+      if (ws) {
+        ws.onclose = () => {
+          resolve();
+        };
+        ws.close();
+      } else {
+        resolve();
+      }
+    });
+  };
+
   const joinChatroom = async (userId) => {
     try {
-      if (ws) {
-        ws.close();
-        setWs(null);
-      }
+      await closeWebSocket();
       const data = await createChatRoomApi(userId);
       const accessToken = localStorage.getItem("access_token");
       const websocketProtocol =

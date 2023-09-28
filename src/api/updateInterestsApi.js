@@ -6,6 +6,7 @@ const updateInterestsApi = async (selectedTags) => {
     const accessToken = localStorage.getItem("access_token");
 
     const requestData = { interests: selectedTags };
+    console.log(selectedTags);
 
     const response = await axios.put(
       `${BASE_URL}/api/post/update-interests/`,

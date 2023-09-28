@@ -13,13 +13,17 @@ import Layout from "../components/Layout";
 const SettingInterestsPage = () => {
   const { user } = useSelector((state) => state.user);
   const [tags, setTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTagIds, setSelectedTagIds] = useState([]);
+const [selectedTagNames, setSelectedTagNames] = useState([]);
+
 
   useEffect(() => { 
     const fetchData = async () => {
       try {
         const data = await getTagsApi();
         setTags(data.tags);
+        console.log(data);
+        setSelectedTagIds(data.interests[0].interests)
       } catch (error) {
         console.error(error);
       }
@@ -30,22 +34,24 @@ const SettingInterestsPage = () => {
     }
   }, [user]);
 
-  const handleTagChange = (tag) => {
-    const isSelected = selectedTags.includes(tag);
-
+  const handleTagChange = (tagId, tagName) => {
+    const isSelected = selectedTagIds.includes(tagId);
+  
     if (isSelected) {
-      setSelectedTags(
-        selectedTags.filter((selectedTag) => selectedTag !== tag)
-      );
+      setSelectedTagIds(selectedTagIds.filter((selectedId) => selectedId !== tagId));
+      setSelectedTagNames(selectedTagNames.filter((selectedName) => selectedName !== tagName));
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      setSelectedTagIds([...selectedTagIds, tagId]);
+      setSelectedTagNames([...selectedTagNames, tagName]);
     }
   };
+  
 
   const sendSelectedTags = async () => {
     try {
-      await updateInterestsApi(selectedTags);
-      setSelectedTags([]);
+      await updateInterestsApi(selectedTagNames);
+      setSelectedTagIds([]);
+      setSelectedTagNames([]);
       toast.success("Interests updated successfully!", {
         position: "top-center",
       });
@@ -53,7 +59,7 @@ const SettingInterestsPage = () => {
       console.error("Error sending selected tags:", error);
     }
   };
-
+  
   return (
     <Layout>
       <main className="flex-1">
@@ -121,8 +127,8 @@ const SettingInterestsPage = () => {
                                 type="checkbox"
                                 id={tag.id}
                                 value={tag.name}
-                                checked={selectedTags.includes(tag.name)}
-                                onChange={() => handleTagChange(tag.name)}
+                                checked={selectedTagIds.includes(tag.id)}
+  onChange={() => handleTagChange(tag.id, tag.name)}
                                 className="mr-1"
                               />
                               <label

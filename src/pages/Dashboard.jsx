@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [posts, setPosts] = useState([]);
   const [profile, setProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  
   // const [showPostModal, setShowPostModal] = useState(false);
   // const [postId, setPostId] = useState(null);
 
@@ -37,6 +38,18 @@ const Dashboard = () => {
     };
     fetchData();
   }, [email]);
+
+  const fetchData = async () => {
+    try {
+      setProfile(null);
+      setPosts([]);
+      const data = await getProfileApi(email);
+      setProfile(data.profile_user);
+      setPosts(data.profile_posts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handlePostClick = (postId) => {
     navigate(`/post/${postId}`);
@@ -91,6 +104,7 @@ const Dashboard = () => {
   console.log("User Email:", user?.email);
 
   const handleClose = () => {
+    fetchData();
     setShowModal(false);
   };
 
@@ -167,9 +181,8 @@ const Dashboard = () => {
                       />
                     )}
                     {profile?.email === user?.email ? (
-                      <div className="absolute bottom-0 right-0 w-12 h-12 bg-[#4d2c4d] rounded-full flex justify-center items-center">
+                      <div onClick={() => setShowModal(true)} className="absolute bottom-0 right-0 w-12 h-12 bg-[#4d2c4d] rounded-full flex justify-center items-center">
                         <span
-                          onClick={() => setShowModal(true)}
                           className="material-symbols-outlined text-white cursor-pointer"
                         >
                           edit
@@ -200,7 +213,7 @@ const Dashboard = () => {
                     </div>
                     <div className="mr-4 p-3 text-center">
                       <span className="text-xl font-bold block uppercase tracking-wide">
-                        {profile?.total_posts ?? ""}
+                        {posts?.length ?? ""}
                       </span>
                       <span className="text-sm text-blueGray-400">Photos</span>
                     </div>

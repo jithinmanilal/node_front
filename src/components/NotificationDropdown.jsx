@@ -28,32 +28,35 @@ const NotificationDropdown = ({ toggleNotification, notes, removeNotification })
         return "has started following you";
     };
 
-    const onClick = async (notificationId, email, notificationType, postId) => {
+    const onClick = async (note) => {
         try {
-            await notificationsSeenApi(notificationId)
-            removeNotification(notificationId);
-            toggleNotification();
-            if (notificationType === "like") {
-                // Redirect to the liked post page
-                navigate(`/post/${postId}`);
-            } else if (notificationType === "comment") {
-                // Redirect to the commented post page
-                navigate(`/post/${postId}`);
-            } else if (notificationType === "post") {
-                // Redirect to the new post page
-                navigate(`/post/${postId}`);
-            } else if (notificationType === "blocked") {
-                // Redirect to a special "blocked" page
-                // navigate(`/blocked`);
+          await notificationsSeenApi(note.id);
+          removeNotification(note.id);
+          toggleNotification();
+      
+          if (note.from_user) {
+            if (note.notification_type === "like" && note.post) {
+              // Redirect to the liked post page
+              navigate(`/post/${note.post.id}`);
+            } else if (note.notification_type === "comment" && note.post) {
+              // Redirect to the commented post page
+              navigate(`/post/${note.post.id}`);
+            } else if (note.notification_type === "post" && note.post) {
+              // Redirect to the new post page
+              navigate(`/post/${note.post.id}`);
+            } else if (note.notification_type === "blocked") {
+              // Redirect to a special "blocked" page
+              // navigate(`/blocked`);
             } else {
-                // Default redirection (e.g., profile or a general landing page)
-                navigate(`/profile/${email}`);
+              // Default redirection (e.g., profile or a general landing page)
+              navigate(`/profile/${note.from_user.email}`);
             }
+          }
         } catch (error) {
-            console.error(error);
+          console.error(error);
         }
-    }
-
+      };
+      
     const handleClose = (e) => {
         if (e.target.id === "wrapper") toggleNotification();
     };
@@ -71,11 +74,11 @@ const NotificationDropdown = ({ toggleNotification, notes, removeNotification })
                             <li key={index}>
                                 <p
                                     className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm public hover:bg-neutral-100 active:no-underline cursor-pointer"
-                                    onClick={() => onClick(note.id, note.from_user.email, note.notification_type, note.post.id )}
+                                    onClick={() => onClick(note)}
                                     data-te-dropdown-item-ref
                                 >
                                     {note.notification_type === "blocked"
-                                        ? "Admin blocked you post"
+                                        ? "Admin blocked your post"
                                         : `${note.from_user.first_name} ${note.from_user.last_name} ${getNotificationMessage(note)}`}
                                 </p>
                             </li>

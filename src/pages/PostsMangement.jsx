@@ -62,12 +62,12 @@ const PostsManagement = () => {
     try {
       await blockPostApi(postId);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-      toast.success('Post Deleted successfully!', {
+      toast.success('Post Blocked successfully!', {
         position: "top-right",
         theme: "dark",
     });
     } catch (error) {
-      toast.error('Failure, post not deleted!', {
+      toast.error('Failure, post not blocked!', {
         position: "top-right",
         theme: "dark",
       });

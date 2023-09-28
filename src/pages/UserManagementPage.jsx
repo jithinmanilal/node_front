@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
+  const [reset, setReset] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,28 +22,29 @@ const UserManagementPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [setReset]);
 
-  const fetchData = async () => {
-    try {
-      setUsers([]);
-      const data = await userListApi();
-      setUsers(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     setUsers([]);
+  //     const data = await userListApi();
+  //     setUsers(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const handleBlockUser = async (userId) => {
       try {
         await blockUserApi(userId);
-        fetchData();
-        toast.success('User Blocked successfully!', {
+        if (reset) { setReset((prevState) => !prevState); }
+        else { setReset((prevState) => !prevState); }
+        toast.success('User Block toggled successfully!', {
             position: "top-right",
             theme: "dark",
         });
       } catch (error) {
-        toast.error('Failure, User not Blocked!', {
+        toast.error('Failure, User Block not toggled!', {
             position: "top-right",
             theme: "dark",
         });
