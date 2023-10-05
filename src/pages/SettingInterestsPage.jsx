@@ -14,16 +14,18 @@ const SettingInterestsPage = () => {
   const { user } = useSelector((state) => state.user);
   const [tags, setTags] = useState([]);
   const [selectedTagIds, setSelectedTagIds] = useState([]);
-const [selectedTagNames, setSelectedTagNames] = useState([]);
+  const [selectedTagNames, setSelectedTagNames] = useState([]);
 
-
-  useEffect(() => { 
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getTagsApi();
         setTags(data.tags);
-        console.log(data);
-        setSelectedTagIds(data.interests[0].interests)
+        setSelectedTagIds(data.interests[0].interests);
+        setSelectedTagNames(data.interests[0].interests.map(tagId => {
+          const matchingTag = data.tags.find(tag => tag.id === tagId);
+          return matchingTag ? matchingTag.name : '';
+        }));
       } catch (error) {
         console.error(error);
       }
@@ -36,22 +38,25 @@ const [selectedTagNames, setSelectedTagNames] = useState([]);
 
   const handleTagChange = (tagId, tagName) => {
     const isSelected = selectedTagIds.includes(tagId);
-  
+
     if (isSelected) {
-      setSelectedTagIds(selectedTagIds.filter((selectedId) => selectedId !== tagId));
-      setSelectedTagNames(selectedTagNames.filter((selectedName) => selectedName !== tagName));
+      setSelectedTagIds(
+        selectedTagIds.filter((selectedId) => selectedId !== tagId)
+      );
+      setSelectedTagNames(
+        selectedTagNames.filter((selectedName) => selectedName !== tagName)
+      );
     } else {
       setSelectedTagIds([...selectedTagIds, tagId]);
       setSelectedTagNames([...selectedTagNames, tagName]);
     }
   };
-  
 
   const sendSelectedTags = async () => {
     try {
       await updateInterestsApi(selectedTagNames);
       setSelectedTagIds([]);
-      setSelectedTagNames([]);
+      setSelectedTagNames([]);  
       toast.success("Interests updated successfully!", {
         position: "top-center",
       });
@@ -59,7 +64,7 @@ const [selectedTagNames, setSelectedTagNames] = useState([]);
       console.error("Error sending selected tags:", error);
     }
   };
-  
+
   return (
     <Layout>
       <main className="flex-1">
@@ -81,15 +86,20 @@ const [selectedTagNames, setSelectedTagNames] = useState([]);
                     name="selected-tab"
                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md"
                   >
-                    <option >Manage Posts</option>
+                    <option>Manage Posts</option>
 
                     <option selected>Profile</option>
+
+                    <option>Change Password</option>
                   </select>
                 </div>
                 <div className="hidden lg:block">
                   <div className="border-b border-gray-200">
                     <nav className="-mb-px flex space-x-8">
-                      <Link to={'/settings'} className="border-transparent cursor-pointer text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" >
+                      <Link
+                        to={"/settings"}
+                        className="border-transparent cursor-pointer text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+                      >
                         {" "}
                         Manage Posts{" "}
                       </Link>
@@ -98,6 +108,11 @@ const [selectedTagNames, setSelectedTagNames] = useState([]);
                         {" "}
                         Profile{" "}
                       </p>
+
+                      <Link to={'/settings/password'} className="border-transparent cursor-pointer text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                        {" "}
+                        Change Password{" "}
+                      </Link>
                     </nav>
                   </div>
                 </div>
@@ -105,10 +120,10 @@ const [selectedTagNames, setSelectedTagNames] = useState([]);
                 <div className="mt-10 divide-y divide-gray-200">
                   <div className="space-y-1">
                     <h3 className="text-lg leading-6 font-medium text-[#4b2848]">
-                      Posts
+                      Interests
                     </h3>
                     <p className="max-w-2xl text-sm text-gray-500">
-                      Manage your posts.
+                      Manage your interests.
                     </p>
                   </div>
                   <div className="mt-6">
@@ -128,7 +143,9 @@ const [selectedTagNames, setSelectedTagNames] = useState([]);
                                 id={tag.id}
                                 value={tag.name}
                                 checked={selectedTagIds.includes(tag.id)}
-  onChange={() => handleTagChange(tag.id, tag.name)}
+                                onChange={() =>
+                                  handleTagChange(tag.id, tag.name)
+                                }
                                 className="mr-1"
                               />
                               <label

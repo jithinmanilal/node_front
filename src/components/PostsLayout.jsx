@@ -5,11 +5,11 @@ import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import PostsModal from "./PostsModal";
 import { Link, useNavigate } from "react-router-dom";
+import NotFoundPage from "../pages/NotFoundPage";
 
 const PostsLayout = ({ title, content, children }) => {
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const navigate = useNavigate();
-
   const [show, setShow] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
   const [showSearchField, setShowSearchField] = useState(false);
@@ -49,6 +49,8 @@ const PostsLayout = ({ title, content, children }) => {
         <title>{title}</title>
         <meta name="description" content={content} />
       </Helmet>
+      { isAuthenticated ?
+      <>
       <Navbar />
       <div className="container mx-auto w-full">
         <div className=" [&>*]:leading-[1.6]">
@@ -185,6 +187,8 @@ const PostsLayout = ({ title, content, children }) => {
           </div>
         </div>
       </div>
+      </>
+      : <NotFoundPage/> }
     </>
   );
 };

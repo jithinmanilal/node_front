@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { toast } from 'react-toastify';
 import updateUserApi from "../api/updateUserApi";
-import { useSelector } from "react-redux";
+import { getUser } from "../features/user";
+import { useDispatch, useSelector } from "react-redux";
 
 const UpdateProfileModal = ({ isVisible, onClose }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector(state => state.user);
   const [postImage, setPostImage] = useState(null);
   const [formVal, setFormVal] = useState({
@@ -14,11 +16,43 @@ const UpdateProfileModal = ({ isVisible, onClose }) => {
     education: user.education,
     work: user.work
   });
+  const [imageError, setImageError] = useState(null);
 
   const { first_name, last_name, age, country, education, work } = formVal;
 
   const onChange = e => {
     setFormVal({...formVal, [e.target.name]: e.target.value });
+  }
+
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+
+    // Check if an image is selected
+    if (!selectedImage) {
+      setPostImage(null);
+      setImageError(null);
+      return;
+    }
+
+    // Check image type (file extension)
+    const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedImageTypes.includes(selectedImage.type)) {
+      setImageError("Invalid image type. Please select a JPEG, PNG, or GIF image.");
+      setPostImage(null);
+      return;
+    }
+
+    // Check image size
+    const maxFileSizeMB = 1.5;
+    if (selectedImage.size > maxFileSizeMB * 1024 * 1024) {
+      setImageError(`Image size exceeds ${maxFileSizeMB}MB. Please choose a smaller image.`);
+      setPostImage(null);
+      return;
+    }
+
+    // If image passes validation, set it
+    setPostImage(selectedImage);
+    setImageError(null);
   }
 
   if (!isVisible) return null;
@@ -27,6 +61,7 @@ const UpdateProfileModal = ({ isVisible, onClose }) => {
     e.preventDefault();
     try {
         await updateUserApi( formVal, postImage);
+        dispatch(getUser());
         onClose();
         toast.success('Post Updated successfully!', {
           position: "top-center",
@@ -70,7 +105,7 @@ const UpdateProfileModal = ({ isVisible, onClose }) => {
                   <input
                     class="hidden"
                     id="formFileSm"
-                    onChange={(e) => setPostImage(e.target.files[0])}
+                    onChange={handleImageChange}
                     type="file"
                   />&nbsp; &nbsp; Upload Profile Image
                 </label>
@@ -118,6 +153,7 @@ const UpdateProfileModal = ({ isVisible, onClose }) => {
                     <input type="text" name="country" onChange={onChange} value={country} id="country" className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#92638f] sm:text-sm sm:leading-6" />
                     </div>
                 </div>
+                {imageError && <p className="text-red-500">{imageError}</p>}
             </div>
 
             <button

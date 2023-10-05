@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [posts, setPosts] = useState([]);
   const [profile, setProfile] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   
   // const [showPostModal, setShowPostModal] = useState(false);
   // const [postId, setPostId] = useState(null);
@@ -25,19 +26,38 @@ const Dashboard = () => {
   const param = useParams();
   const email = param.email;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getProfileApi(email);
-        setProfile(data.profile_user);
-        console.log(data.profile_user);
-        setPosts(data.profile_posts);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, [email]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const data = await getProfileApi(email);
+      setProfile(data.profile_user);
+      setPosts(data.profile_posts);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  fetchData();
+}, [email]);
+
+if (loading) {
+  return (
+    <div className='flex items-center justify-center min-h-screen'>
+      <div
+        className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        role="status"
+      >
+        <span
+          className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+        >
+          Loading...
+        </span>
+      </div>
+    </div>
+  )
+}
 
   const fetchData = async () => {
     try {

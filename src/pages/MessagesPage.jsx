@@ -17,6 +17,7 @@ const MessagesPage = () => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [bg, setBg] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,14 +34,31 @@ const MessagesPage = () => {
     }
   }, [user]);
 
+  // useEffect(() => {
+  //   if (ws) {
+  //     ws.onmessage = (event) => {
+  //       const message = JSON.parse(event.data);
+  //       setMessages((prevMessages) => [...prevMessages, message]);
+  //     };
+  //   }
+  // }, [ws]);
+
   useEffect(() => {
+    let messageListener;
     if (ws) {
-      ws.onmessage = (event) => {
+      messageListener = (event) => {
         const message = JSON.parse(event.data);
         setMessages((prevMessages) => [...prevMessages, message]);
       };
+      ws.addEventListener('message', messageListener);
     }
+    return () => {
+      if (ws) {
+        ws.removeEventListener('message', messageListener);
+      }
+    };
   }, [ws]);
+  
 
   const handleSendMessage = () => {
     if (ws && inputMessage.trim() !== "") {
@@ -48,28 +66,14 @@ const MessagesPage = () => {
       setInputMessage("");
     }
   };
-
-  const closeWebSocket = () => {
-    return new Promise((resolve) => {
-      if (ws) {
-        ws.onclose = () => {
-          resolve();
-        };
-        ws.close();
-      } else {
-        resolve();
-      }
-    });
-  };
-
   const joinChatroom = async (userId) => {
     try {
-      await closeWebSocket();
       const data = await createChatRoomApi(userId);
       const accessToken = localStorage.getItem("access_token");
       const websocketProtocol =
         window.location.protocol === "https:" ? "wss://" : "ws://";
       const wsUrl = `${websocketProtocol}${window.location.host}/ws/chat/${data.id}/?token=${accessToken}`;
+      // const wsUrl = `ws://localhost:8000/ws/chat/${data.id}/?token=${accessToken}`
       const newChatWs = new WebSocket(wsUrl);
       setBg(true);
 
@@ -103,6 +107,7 @@ const MessagesPage = () => {
     } catch (error) {
       console.error(error);
     }
+    setSelectedProfile(userId)
   };
 
   if (!isAuthenticated) {
@@ -184,7 +189,9 @@ const MessagesPage = () => {
                 <div
                   key={profile.id}
                   onClick={() => joinChatroom(profile.id)}
-                  className="relative flex items-center rounded-lg m-1 cursor-pointer bg-[#f2dfcf] p-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]"
+                  className={`relative flex items-center rounded-lg m-1 cursor-pointer ${
+                    selectedProfile === profile.id ? "bg-[#4b2848]" : "bg-[#f2dfcf]"
+                  } p-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]`}
                 >
                   {profile.unseen_message_count > 0 && (
                     <div className="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 rounded-full">

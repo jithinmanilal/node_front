@@ -70,20 +70,26 @@ const Navbar = () => {
       const websocketProtocol =
         window.location.protocol === "https:" ? "wss://" : "ws://";
       const wsURL = `${websocketProtocol}${window.location.host}/ws/notification/?token=${accessToken}`;
+      // const wsURL = `ws://localhost:8000/ws/notification/?token=${accessToken}`
       const socket = new WebSocket(wsURL);
+      console.log(wsURL);
 
       socket.onopen = () => {
         console.log("WebSocket connection established");
       };
 
       socket.onmessage = (event) => {
-        const newNotification = JSON.parse(event.data);
-        console.log(newNotification);
-        if (newNotification.type === "notification") {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "notification") {
+          // Update the notification state with the new notification
           setNotification((prevNotifications) => [
             ...prevNotifications,
-            newNotification.payload,
+            data.payload,
           ]);
+        } else if (data.type === "logout") {
+          dispatch(logout());
+          navigate("/");
         }
       };
 
@@ -94,7 +100,7 @@ const Navbar = () => {
         socket.close();
       };
     }
-  }, [user]);
+  }, [user, dispatch, navigate]);
 
   const authLinks = (
     <ul
@@ -133,13 +139,14 @@ const Navbar = () => {
           <span class="material-symbols-outlined">notifications</span>
           <span
             className={`text-xs text-blue-700 align-top${
-              notification.length === 0
+              notification && notification.length === 0
                 ? ""
                 : "border border-black align-top rounded-full"
             }`}
           >
-            {" "}
-            {notification.length === 0 ? "" : notification.length}{" "}
+            {notification && notification.length === 0
+              ? ""
+              : notification.length}
           </span>
         </span>
         {isNotificationVisible && (

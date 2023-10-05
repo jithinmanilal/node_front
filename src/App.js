@@ -23,6 +23,9 @@ import BlockedPage from './pages/BlockedPage';
 
 import NotFoundPage from './pages/NotFoundPage';
 import ReportedPage from './pages/ReportedPage';
+import ForgotPassword from './pages/ForgotPassword';
+import PasswordResetWrapper from './pages/PasswordReset';
+import ChangePassword from './pages/ChangePassword';
 
 
 
@@ -50,6 +53,8 @@ function App() {
         <Route path='/' element={< LoginPage/>} />
         <Route path='/profile/:email' element={< Dashboard/>} />
         <Route path='/register' element={< RegisterPage/>} />
+        <Route path='/forgot' element={< ForgotPassword/>} />
+        <Route path='/password-reset/:uid/:token' element={< PasswordResetWrapper/>} />
         <Route path='/messages' element={< MessagesPage/>} />
         <Route path='/about' element={< AboutPage/>} />
         <Route path='/home' element={< PostsPage/>} />
@@ -58,6 +63,7 @@ function App() {
         <Route path='/network' element={< MyNetworksPage/>} />
         <Route path='/settings' element={< SettingsPage/>} />
         <Route path='/settings/profile' element={<SettingInterestsPage />} />
+        <Route path='/settings/password' element={<ChangePassword />} />
 
         <Route path='/admin-login' element={< AdminLogin/>} />
         <Route path='/admin' element={< AdminDashboard/>} />
@@ -68,7 +74,7 @@ function App() {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </Router> 
+    </Router>
   );
 }
 

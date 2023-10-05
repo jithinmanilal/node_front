@@ -22,7 +22,7 @@ const UserManagementPage = () => {
     };
 
     fetchData();
-  }, [setReset]);
+  }, [reset]);
 
   // const fetchData = async () => {
   //   try {

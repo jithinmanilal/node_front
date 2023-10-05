@@ -2,13 +2,18 @@ import React, { useEffect, useState } from 'react';
 import AdminSideBar from '../components/AdminSideBar';
 
 import blockedPostsApi from '../api/blockedPostsApi';
+import unBlockPostApi from '../api/unBlockPostApi';
 import PostPageModal from '../components/PostPageModal';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const BlockedPage = () => {
   const [posts, setPosts] = useState([]);
   const [showPostModal, setShowPostModal] = useState(false);
   const [postId, setPostId] = useState(null);
+  const [reset, setReset] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +26,7 @@ const BlockedPage = () => {
     };
 
     fetchData();
-  }, []); 
+  }, [reset]); 
 
   const handlePostClick = (postId) => {
     setPostId(postId);
@@ -31,6 +36,22 @@ const BlockedPage = () => {
   const closePostModal = () => {
     setShowPostModal(false);
     setPostId(null);
+  };
+
+  const handleUnBlockPost = async (userId) => {
+    try {
+      await unBlockPostApi(userId);
+      setReset((prevState) => !prevState);     
+      toast.success('Post unblocked successfully!', {
+          position: "top-right",
+          theme: "dark",
+      });
+    } catch (error) {
+      toast.error('Failure, Post unblock unsuccessful!', {
+          position: "top-right",
+          theme: "dark",
+      });
+    }
   };
 
   return (
@@ -45,7 +66,7 @@ const BlockedPage = () => {
               <th className="px-4 py-2">Post Description</th>
               <th className="px-4 py-2">Post User</th>
               <th className="px-4 py-2">Report</th>
-              <th className="px-4 py-2">User Email</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -61,12 +82,20 @@ const BlockedPage = () => {
                   {post.author.first_name} {post.author.last_name}
                 </td>
                 <td className="px-4 py-2">{ post.reports_count === 0 ? '-': `Reported by ${post.reports_count} users` }</td>
-                <td className="px-4 py-2">{post.author.email}</td>
+                <td className="px-4 py-2"><button
+                        type="button"
+                        className="inline-block rounded bg-[#3f6212] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64]"
+                        // style={{ backgroundColor: '#8fce00' }}
+                        onClick={() => handleUnBlockPost(post.id)}
+                        >
+                        Unblock
+                        </button></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <ToastContainer />
     </AdminSideBar>
   );
 };

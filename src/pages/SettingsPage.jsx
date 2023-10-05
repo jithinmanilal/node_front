@@ -125,6 +125,8 @@ const SettingsPage = () => {
                     <option selected>Manage Posts</option>
 
                     <option>Profile</option>
+
+                    <option>Change Password</option>
                   </select>
                 </div>
                 <div className="hidden lg:block">
@@ -138,6 +140,11 @@ const SettingsPage = () => {
                       <Link to={'/settings/profile'} className="border-transparent cursor-pointer text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                         {" "}
                         Profile{" "}
+                      </Link>
+
+                      <Link to={'/settings/password'} className="border-transparent cursor-pointer text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                        {" "}
+                        Change Password{" "}
                       </Link>
                     </nav>
                   </div>
